@@ -1,6 +1,15 @@
-# Name der App
+# Phinder
 
-**Füge hier einen kurzen, knackigen Slogan ein, um deine App zu bewerben.**
+**Die All in One Lösung für Modelle und Fotografen**
+
+
+Phinder ist DIE App, für Modelle und Fotografen - oder auch die, die es gerne werden wollen. Du bist auf der Suche nach einem Model aus deiner Gegend? Dann swipe dich durch die Liste und Suche nach den Kriterien, die für dich wichtig sind. 
+Du hast einen Fotografen und willst schauen wie zuverlässig er ist? Schaue dir bisher bewertete Shoots von anderen Modellen an. 
+
+Egal ob es um die Planung deines nächsten Shoots geht, das finden einer passenden Person in einer fremden Stadt oder die Suche nach passenden Studios. 
+Mit Phinder ist das alles möglich!
+
+
 
 Beschreibe hier in ein paar Sätzen, was deine App bietet.
 
@@ -12,40 +21,50 @@ Vermeide es, hier allzusehr in technische Details zu gehen.
 Füge hier am Ende die Screenshots deiner App ein (achte hierbei auf die Guidelines).
 
 <p>
-  <img src="./img/screen1.png" width="200">
-  <img src="./img/screen2.png" width="200">
-  <img src="./img/screen3.png" width="200">
+  <img src="./img/Login.png" width="200">
+  <img src="./img/Homescreen.png" width="200">
+  <img src="./img/Profil_des_Fotografen.png" width="200">
 </p>
 
 
 ## Features
-Hier kommen alle Features rein, welche deine App bietet.
 
-**Tipp: Du kannst diese Punkte auch am Anfang ausfüllen und mit der Zeit abhaken, sodass am Ende eine vollständige Liste entsteht.**
+- [ ] Model- & Fotografensuche
+- [ ] Filtersystem um passende Personen zu finden
+- [ ] Umkreissuche
+- [ ] Überblick über bisherige Shoots
+- [ ] Bewerten von Shoots
+- [ ] Bewertung andere Personen lesen
+- [ ] Präsentieren der eigenen Arbeiten
 
-- [x] Feature 1
-- [x] Feature 2
-- [ ] ...
 
 
 ## Technischer Aufbau
 
 #### Projektaufbau
-Eine kurze Beschreibung deiner Ordnerstruktur und Architektur (MVVM, Repositories) um Außenstehenden zu helfen, sich in deinem Projekt zurecht zu finden.
+Ich verwende die MVVM Architektur. 
+Dabei werde ich einen Ordner mit Modellen haben, welcher die Logik sowie die Daten hat
+Weiterhin wird es einen View Ordner geben, welcher Dateien enthält, die für die UI zuständig ist. 
+Im ViewModel Ordner werden die ViewModele liegen.
+Im Repository Ordner werde ich die API Calls sowie die Datenbank Zugriffe speichern.
+
 
 #### Datenspeicherung
-Welche Daten speicherst du? Wo und wie (Firebase, Core Data)? Erkläre hier auch, warum du den jeweiligen Dienst nutzt (offline-first, Sync usw.).
+Für die User- & Datenspeicherung möchte ich eine Firebase Datenbank verwenden. 
 
 #### API Calls
-Welche APIs verwendest du?
+Folgende API Calls verwende ich:
+
+https://openweathermap.org/api
+
 
 #### 3rd-Party Frameworks
-Verwendest du Frameworks, die nicht von dir stammen? Bspw. Swift Packages für Firebase, fertige SwiftUI-Views o.Ä.? Gib diese hier an.
+Firebase Framework
 
 
 ## Ausblick
-Beschreibe hier, wo die Reise nach deinem Praxisprojekt hin geht. Was möchtest du in Zukunft noch ergänzen?
 
-- [ ] Geplantes Feature 1
-- [ ] Geplantes Feature 2
-- [ ] ...
+- [ ] Abspeichern Ideen mit einem Fotografen / Model
+- [ ] Matchsystem
+- [ ] Suche nach Location (Airbnb & Studios)
+- [ ] Planung anstehender Shoots in der App (Datum, Uhrzeit, Ort etc.)
