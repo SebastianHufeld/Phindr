@@ -9,17 +9,7 @@ Du hast einen Fotografen und willst schauen wie zuverlässig er ist? Schaue dir 
 Egal ob es um die Planung deines nächsten Shoots geht, das finden einer passenden Person in einer fremden Stadt oder die Suche nach passenden Studios. 
 Mit Phinder ist das alles möglich!
 
-
-
-Beschreibe hier in ein paar Sätzen, was deine App bietet.
-
-Für wen ist sie geeignet? Welches Problem löst sie? Was macht deine App anders/besser als andere Apps?
-Vermeide es, hier allzusehr in technische Details zu gehen.
-
-
 ## Design
-Füge hier am Ende die Screenshots deiner App ein (achte hierbei auf die Guidelines).
-
 <p>
   <img src="./img/Login.png" width="200">
   <img src="./img/Homescreen.png" width="200">
@@ -32,7 +22,6 @@ Füge hier am Ende die Screenshots deiner App ein (achte hierbei auf die Guideli
 - [ ] Model- & Fotografensuche
 - [ ] Filtersystem um passende Personen zu finden
 - [ ] Umkreissuche
-- [ ] Überblick über bisherige Shoots
 - [ ] Bewerten von Shoots
 - [ ] Bewertung andere Personen lesen
 - [ ] Präsentieren der eigenen Arbeiten
@@ -65,6 +54,7 @@ Firebase Framework
 ## Ausblick
 
 - [ ] Abspeichern Ideen mit einem Fotografen / Model
+- [ ] Überblick über bisherige Shoots
 - [ ] Matchsystem
 - [ ] Suche nach Location (Airbnb & Studios)
 - [ ] Planung anstehender Shoots in der App (Datum, Uhrzeit, Ort etc.)
