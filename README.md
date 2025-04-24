@@ -32,9 +32,9 @@ Mit Phinder ist das alles möglich!
 
 #### Projektaufbau
 Ich verwende die MVVM Architektur. 
-Dabei werde ich einen Ordner mit Modellen haben, welcher die Logik sowie die Daten hat
+Dabei werde ich einen Ordner mit Modellen haben, welcher die Datenstruktur enthält.
 Weiterhin wird es einen View Ordner geben, welcher Dateien enthält, die für die UI zuständig ist. 
-Im ViewModel Ordner werden die ViewModele liegen.
+Im ViewModel Ordner werden die Logiken und Funktionen liegen, für die jeweilieg View.
 Im Repository Ordner werde ich die API Calls sowie die Datenbank Zugriffe speichern.
 
 
