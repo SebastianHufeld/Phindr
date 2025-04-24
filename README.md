@@ -31,6 +31,7 @@ Mit Phinder ist das alles möglich!
 ## Technischer Aufbau
 
 #### Projektaufbau
+
 Ich verwende die MVVM Architektur. 
 Dabei werde ich einen Ordner mit Modellen haben, welcher die Datenstruktur enthält.
 Weiterhin wird es einen View Ordner geben, welcher Dateien enthält, die für die UI zuständig ist. 
@@ -38,10 +39,15 @@ Im ViewModel Ordner werden die Logiken und Funktionen liegen, für die jeweilieg
 Im Repository Ordner werde ich die API Calls sowie die Datenbank Zugriffe speichern.
 
 
+
 #### Datenspeicherung
+
 Für die User- & Datenspeicherung möchte ich eine Firebase Datenbank verwenden. 
 
+
+
 #### API Calls
+
 Folgende API Calls verwende ich:
 
 https://openweathermap.org/api
@@ -51,7 +57,9 @@ Die Wetter API dient dazu, dass die Shoots besser geplant werden können. In mei
 
 
 #### 3rd-Party Frameworks
+
 Bisher ist geplant das Firebase Framework zu verwenden.
+
 
 
 ## Ausblick
