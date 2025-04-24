@@ -46,9 +46,12 @@ Folgende API Calls verwende ich:
 
 https://openweathermap.org/api
 
+Die Wetter API dient dazu, dass die Shoots besser geplant werden können. In meiner Vorstellung wird dann anhand des Tages und des Standortes das Wetter angezeigt.
+
+
 
 #### 3rd-Party Frameworks
-Firebase Framework
+Bisher ist geplant das Firebase Framework zu verwenden.
 
 
 ## Ausblick
