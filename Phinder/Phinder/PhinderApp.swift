@@ -12,7 +12,6 @@ import SwiftData
 struct PhinderApp: App {
     var body: some Scene {
         WindowGroup {
-            
         }
     }
 }
