@@ -7,11 +7,10 @@
 
 import Foundation
 
-struct User: Codable, Identifiable {
-    var id = UUID()
+struct User: Codable {
+    let userId: String
     let username: String
     let mail: String
-    let password: String
     let firstName: String
     let lastName: String
     let isPhotographer: Bool
@@ -21,4 +20,5 @@ struct User: Codable, Identifiable {
     let houseNumber: Int
     let city: String
     let postalCode: Int
+    let registrationDate: Date
 }
