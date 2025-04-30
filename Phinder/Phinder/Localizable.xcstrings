@@ -1,7 +1,87 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Email" : {
 
+    },
+    "Fotograf" : {
+
+    },
+    "Hallo %@" : {
+
+    },
+    "Hausnummer" : {
+
+    },
+    "Hello, World!" : {
+
+    },
+    "Home" : {
+
+    },
+    "Login" : {
+
+    },
+    "Model" : {
+
+    },
+    "Nachname" : {
+
+    },
+    "Nachrichten" : {
+
+    },
+    "Noch keinen Account? Jetzt Registrieren!" : {
+
+    },
+    "Passwort" : {
+
+    },
+    "Passwort bestätigen" : {
+
+    },
+    "Persönliche Daten" : {
+
+    },
+    "Postleitzahl" : {
+
+    },
+    "Profil" : {
+
+    },
+    "Profil anlegen" : {
+
+    },
+    "Profil bearbeiten" : {
+
+    },
+    "Shoots" : {
+
+    },
+    "Stadt" : {
+
+    },
+    "Straßenname" : {
+
+    },
+    "Studio" : {
+
+    },
+    "Suche" : {
+
+    },
+    "Username" : {
+
+    },
+    "Vorname" : {
+
+    },
+    "Wähle deine Rolle" : {
+
+    },
+    "Weiter" : {
+
+    }
   },
   "version" : "1.0"
 }

@@ -22,22 +22,34 @@ class ProfileSetupViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     func validateProfileData() -> Bool {
-        guard !streetName.isEmpty,
+        guard isPhotographer || isModel || isStudio else {
+            errorMessage = "Bitte wähle mindestens eine Rolle aus."
+            return false
+        }
+        
+        guard !firstName.isEmpty,
+              !lastName.isEmpty,
+              !streetName.isEmpty,
               houseNumber != nil,
               !city.isEmpty,
               postalCode != nil else {
             errorMessage = "Bitte alle Felder ausfüllen."
             return false
         }
+        
         return true
     }
     
     func buildProfileData() -> ProfileData? {
         guard validateProfileData(),
               let houseNumber = houseNumber,
-              let postalCode = postalCode else { return nil }
+              let postalCode = postalCode else {
+            return nil
+        }
         
         return ProfileData(
+            firstName: firstName,
+            lastName: lastName,
             isPhotographer: isPhotographer,
             isModel: isModel,
             isStudio: isStudio,
@@ -47,16 +59,24 @@ class ProfileSetupViewModel: ObservableObject {
             postalCode: postalCode
         )
     }
-    func saveProfile(loginViewModel: LoginViewModel) {
-        guard let registerData = loginViewModel.registerData else {
-            self.errorMessage = "Fehler: Keine Registrierungsdaten vorhanden."
+    
+    func registerUser(
+        loginViewModel: LoginViewModel,
+        email: String,
+        username: String,
+        password: String,
+        passwordValidation: String
+    ) {
+        guard let profileData = buildProfileData() else {
             return
         }
         
-        guard let profileData = buildProfileData() else {
-            return // Fehler ist schon gesetzt
-        }
-        
-        loginViewModel.createPhinderUser(registerData: registerData, profileData: profileData)
+        loginViewModel.registerUser(
+            email: email,
+            username: username,
+            password: password,
+            passwordValidation: passwordValidation,
+            profileData: profileData
+        )
     }
 }

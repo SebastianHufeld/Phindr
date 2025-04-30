@@ -1,10 +1,3 @@
-//
-//  LoginViewModel.swift
-//  Phinder
-//
-//  Created by Sebastian Hufeld on 28.04.25.
-//
-
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -13,73 +6,70 @@ import FirebaseFirestore
 class LoginViewModel: ObservableObject {
     @Published var user: User?
     @Published var errorMessage: String?
-    @Published var registerData: RegisterData?
-
+    @Published var isRegistrationInProgress = false
+    
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
-
+    
     var isUserLoggedIn: Bool {
         self.user != nil
     }
-
+    
     init() {
         self.checkLoginState()
     }
-
-    func registerUser(withEmail email: String, username: String, password: String, passwordValidation: String) {
+    
+    func registerUser(email: String, username: String, password: String, passwordValidation: String, profileData: ProfileData) {
         guard email.contains("@") else {
             self.errorMessage = "Email-Adresse ungültig"
             return
         }
-
+        
+        guard password == passwordValidation else {
+            self.errorMessage = "Passwörter stimmen nicht überein"
+            return
+        }
+        
+        self.isRegistrationInProgress = true
+        self.errorMessage = nil
+        
         Task {
             do {
                 let result = try await auth.createUser(withEmail: email, password: password)
                 let firebaseAuthUserId = result.user.uid
-                self.registerData = RegisterData(
+                
+            
+                let newUser = User(
                     userId: firebaseAuthUserId,
                     username: username,
-                    email: email,
-                    firstName: "",
-                    lastName: ""
+                    mail: email,
+                    firstName: profileData.firstName,
+                    lastName: profileData.lastName,
+                    isPhotographer: profileData.isPhotographer,
+                    isModel: profileData.isModel,
+                    isStudio: profileData.isStudio,
+                    streetName: profileData.streetName,
+                    houseNumber: profileData.houseNumber,
+                    city: profileData.city,
+                    postalCode: profileData.postalCode,
+                    registrationDate: Date()
                 )
-            } catch {
-                errorMessage = "Account konnte nicht angelegt werden: \(error.localizedDescription)"
-                print(error)
-            }
-        }
-    }
-
-
-    func createPhinderUser(registerData: RegisterData, profileData: ProfileData) {
-        let newUser = User(
-            userId: registerData.userId,
-            username: registerData.username,
-            mail: registerData.email,
-            firstName: registerData.firstName,
-            lastName: registerData.lastName,
-            isPhotographer: profileData.isPhotographer,
-            isModel: profileData.isModel,
-            isStudio: profileData.isStudio,
-            streetName: profileData.streetName,
-            houseNumber: profileData.houseNumber,
-            city: profileData.city,
-            postalCode: profileData.postalCode,
-            registrationDate: Date()
-        )
-
-        Task {
-            do {
-                try firestore.collection("users").document(newUser.userId).setData(from: newUser)
+                
+                try await firestore.collection("users").document(newUser.userId).setData(from: newUser)
                 self.user = newUser
+                self.isRegistrationInProgress = false
+                
             } catch {
-                self.errorMessage = "Nutzer konnte nicht erstellt werden: \(error.localizedDescription)"
+                self.errorMessage = "Registrierung fehlgeschlagen: \(error.localizedDescription)"
+                self.isRegistrationInProgress = false
                 print(error)
             }
         }
     }
-
+    
     func loginUser(withEmail email: String, password: String) {
+        self.errorMessage = nil
+        
         Task {
             do {
                 let result = try await auth.signIn(withEmail: email, password: password)
@@ -91,7 +81,7 @@ class LoginViewModel: ObservableObject {
             }
         }
     }
-
+    
     func logout() {
         do {
             try auth.signOut()
@@ -101,7 +91,7 @@ class LoginViewModel: ObservableObject {
             print(error)
         }
     }
-
+    
     private func readUser(userId: String) {
         Task {
             do {
@@ -113,7 +103,7 @@ class LoginViewModel: ObservableObject {
             }
         }
     }
-
+    
     private func checkLoginState() {
         if let currentUser = auth.currentUser {
             self.readUser(userId: currentUser.uid)

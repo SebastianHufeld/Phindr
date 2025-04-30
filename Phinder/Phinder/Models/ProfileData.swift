@@ -8,6 +8,8 @@
 import Foundation
 
 struct ProfileData {
+    var firstName: String
+    var lastName: String
     var isPhotographer: Bool
     var isModel: Bool
     var isStudio: Bool

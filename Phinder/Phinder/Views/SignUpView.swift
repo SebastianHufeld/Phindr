@@ -42,26 +42,25 @@ struct SignUpView: View {
                     .foregroundStyle(.red)
             }
             
-            Button("Registrieren") {
-                loginViewModel.registerUser(
-                    withEmail: email,
-                    username: userName,
-                    password: password,
-                    passwordValidation: passwordValidation
-                )
+            Button("Weiter") {
+                if email.isEmpty || userName.isEmpty || password.isEmpty || passwordValidation.isEmpty {
+                    loginViewModel.errorMessage = "Bitte alle Felder ausfüllen"
+                    return
+                }
+                
                 showProfileSetup = true
-            }
-            .sheet(isPresented: $showProfileSetup) {
-                ProfileSetupView()
-                    .environmentObject(loginViewModel)
             }
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
         }
+        .sheet(isPresented: $showProfileSetup) {
+            ProfileSetupView(
+                email: email,
+                userName: userName,
+                password: password,
+                passwordValidation: passwordValidation
+            )
+            .environmentObject(loginViewModel)
+        }
     }
-}
-
-#Preview {
-    SignUpView()
-        .environmentObject(LoginViewModel())
 }

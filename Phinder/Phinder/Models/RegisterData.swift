@@ -11,6 +11,4 @@ struct RegisterData {
     var userId: String
     var username: String
     var email: String
-    var firstName: String
-    var lastName: String
 }
