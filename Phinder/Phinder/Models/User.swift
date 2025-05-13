@@ -13,12 +13,23 @@ struct User: Codable, Equatable {
     let mail: String
     let firstName: String
     let lastName: String
+    let gender: String
+    let birthdate: Date
     let isPhotographer: Bool
     let isModel: Bool
     let isStudio: Bool
     let streetName: String
-    let houseNumber: Int
+    let houseNumber: String
     let city: String
-    let postalCode: Int
+    let postalCode: String
+    let experienceLevel: String
+    let shootingCategories: [String]
+    let hasTattoos: Bool
+    let hasPiercings: Bool
     let registrationDate: Date
+
+    var age: Int {
+        let calendar = Calendar.current
+        return calendar.dateComponents([.year], from: birthdate, to: Date()).year ?? 0
+    }
 }

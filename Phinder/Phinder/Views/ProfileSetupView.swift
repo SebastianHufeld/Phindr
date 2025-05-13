@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileSetupView: View {
     @EnvironmentObject var loginViewModel: LoginViewModel
     @StateObject private var setupViewModel = ProfileSetupViewModel()
+    @StateObject private var filterViewModel = FilterViewModel()
     @Environment(\.dismiss) private var dismiss
     
     let email: String
@@ -18,14 +19,50 @@ struct ProfileSetupView: View {
                 Toggle("Studio", isOn: $setupViewModel.isStudio)
             }
             
-            Section(header: Text("Persönliche Daten")) {
+            Section(header: Text("Persönliche Infos")) {
                 TextField("Vorname", text: $setupViewModel.firstName)
                 TextField("Nachname", text: $setupViewModel.lastName)
                 TextField("Straßenname", text: $setupViewModel.streetName)
-                TextField("Hausnummer", value: $setupViewModel.houseNumber, format: .number)
+                TextField("Hausnummer", text: $setupViewModel.houseNumber)
                 TextField("Stadt", text: $setupViewModel.city)
-                TextField("Postleitzahl", value: $setupViewModel.postalCode, format: .number)
+                TextField("Postleitzahl", text: $setupViewModel.postalCode)
+                Picker("Geschlecht", selection: $filterViewModel.gender) {
+                    Text("Männlich").tag("Männlich")
+                    Text("Weiblich").tag("Weiblich")
+                    Text("Divers").tag("Divers")
+                }
+
+                DatePicker("Geburtsdatum", selection: $filterViewModel.birthdate, displayedComponents: .date)
             }
+            
+            Section(header: Text("Erfahrung & Bereiche")) {
+                Picker("Erfahrung", selection: $filterViewModel.experienceLevel) {
+                    Text("Anfänger").tag("Anfänger")
+                    Text("Semiprofi").tag("Semiprofi")
+                    Text("Profi").tag("Profi")
+                }
+                .pickerStyle(.segmented)
+
+                Section("Bereiche") {
+                    ForEach(["Portrait", "Studio", "Lingerie", "Teilakt", "Akt", "Bademode"], id: \.self) { category in
+                        Toggle(category, isOn: Binding(
+                            get: { filterViewModel.shootingCategories.contains(category) },
+                            set: { isSelected in
+                                if isSelected {
+                                    filterViewModel.shootingCategories.append(category)
+                                } else {
+                                    filterViewModel.shootingCategories.removeAll { $0 == category }
+                                }
+                            }
+                        ))
+                    }
+                }
+            }
+            Section("Tattoos & Piercings") {
+                Toggle("Tätowiert", isOn: $filterViewModel.hasTattoos)
+                Toggle("Piercings", isOn: $filterViewModel.hasPiercings)
+            }
+
             
             if let errorMessage = setupViewModel.errorMessage {
                 Text(errorMessage)
@@ -43,7 +80,8 @@ struct ProfileSetupView: View {
                     email: email,
                     username: userName,
                     password: password,
-                    passwordValidation: passwordValidation
+                    passwordValidation: passwordValidation,
+                    searchFilter: filterViewModel
                 )
             } label: {
                 if loginViewModel.isRegistrationInProgress {
@@ -52,6 +90,7 @@ struct ProfileSetupView: View {
                     Text("Profil anlegen")
                 }
             }
+
             .frame(maxWidth: .infinity)
             .buttonStyle(.borderedProminent)
             .disabled(loginViewModel.isRegistrationInProgress)

@@ -14,7 +14,7 @@ struct ProfileData {
     var isModel: Bool
     var isStudio: Bool
     var streetName: String
-    var houseNumber: Int
+    var houseNumber: String
     var city: String
-    var postalCode: Int
+    var postalCode: String
 }

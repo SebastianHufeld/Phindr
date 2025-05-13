@@ -43,12 +43,9 @@ struct SignUpView: View {
             }
             
             Button("Weiter") {
-                if email.isEmpty || userName.isEmpty || password.isEmpty || passwordValidation.isEmpty {
-                    loginViewModel.errorMessage = "Bitte alle Felder ausfüllen"
-                    return
+                if loginViewModel.validateRegistration(email: email, password: password, passwordValidation: passwordValidation) {
+                    showProfileSetup = true
                 }
-                
-                showProfileSetup = true
             }
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)

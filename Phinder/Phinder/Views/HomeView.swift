@@ -23,8 +23,12 @@ struct HomeView: View {
                     .font(.title2)
                 
                 Button("Profil bearbeiten") {
+                    ProfileEditView()
                 }
                 .buttonStyle(.bordered)
+                Button("Ausloggen"){
+                    loginViewModel.logout()
+                }
             }
             
             Spacer()

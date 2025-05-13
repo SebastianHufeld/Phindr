@@ -1,10 +1,69 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%lld Jahre alt, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld Jahre alt, %2$@"
+          }
+        }
+      }
+    },
+    "%lld Jahre, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld Jahre, %2$@"
+          }
+        }
+      }
+    },
+    "%lld km" : {
+
+    },
+    "Alter" : {
+
+    },
+    "Anfänger" : {
+
+    },
+    "Ausloggen" : {
+
+    },
+    "Bereiche" : {
+
+    },
+    "Bis:" : {
+
+    },
+    "Bitte gültigen Altersbereich eingeben." : {
+
+    },
+    "Divers" : {
+
+    },
     "Email" : {
 
     },
+    "Entfernung" : {
+
+    },
+    "Erfahrung" : {
+
+    },
+    "Erfahrung & Bereiche" : {
+
+    },
     "Fotograf" : {
+
+    },
+    "Geburtsdatum" : {
+
+    },
+    "Geschlecht" : {
 
     },
     "Hallo %@" : {
@@ -22,6 +81,9 @@
     "Login" : {
 
     },
+    "Männlich" : {
+
+    },
     "Model" : {
 
     },
@@ -34,16 +96,25 @@
     "Noch keinen Account? Jetzt Registrieren!" : {
 
     },
+    "Ort" : {
+
+    },
     "Passwort" : {
 
     },
     "Passwort bestätigen" : {
 
     },
-    "Persönliche Daten" : {
+    "Persönliche Infos" : {
+
+    },
+    "Piercings" : {
 
     },
     "Postleitzahl" : {
+
+    },
+    "Profi" : {
 
     },
     "Profil" : {
@@ -53,6 +124,9 @@
 
     },
     "Profil bearbeiten" : {
+
+    },
+    "Semiprofi" : {
 
     },
     "Shoots" : {
@@ -70,7 +144,22 @@
     "Suche" : {
 
     },
+    "Suchergebnisse" : {
+
+    },
+    "Tätowiert" : {
+
+    },
+    "Tattoos" : {
+
+    },
+    "Tattoos & Piercings" : {
+
+    },
     "Username" : {
+
+    },
+    "Von:" : {
 
     },
     "Vorname" : {
@@ -79,7 +168,16 @@
     "Wähle deine Rolle" : {
 
     },
+    "Weiblich" : {
+
+    },
     "Weiter" : {
+
+    },
+    "z. B. 18" : {
+
+    },
+    "z. B. 99" : {
 
     }
   },

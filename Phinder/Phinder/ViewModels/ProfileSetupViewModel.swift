@@ -15,9 +15,9 @@ class ProfileSetupViewModel: ObservableObject {
     @Published var isModel: Bool = false
     @Published var isStudio: Bool = false
     @Published var streetName: String = ""
-    @Published var houseNumber: Int?
+    @Published var houseNumber: String = ""
     @Published var city: String = ""
-    @Published var postalCode: Int?
+    @Published var postalCode: String = ""
     
     @Published var errorMessage: String?
     
@@ -30,9 +30,9 @@ class ProfileSetupViewModel: ObservableObject {
         guard !firstName.isEmpty,
               !lastName.isEmpty,
               !streetName.isEmpty,
-              houseNumber != nil,
+              !houseNumber.isEmpty,
               !city.isEmpty,
-              postalCode != nil else {
+              !postalCode.isEmpty else {
             errorMessage = "Bitte alle Felder ausfüllen."
             return false
         }
@@ -41,12 +41,10 @@ class ProfileSetupViewModel: ObservableObject {
     }
     
     func buildProfileData() -> ProfileData? {
-        guard validateProfileData(),
-              let houseNumber = houseNumber,
-              let postalCode = postalCode else {
+        guard validateProfileData() else {
             return nil
         }
-        
+
         return ProfileData(
             firstName: firstName,
             lastName: lastName,
@@ -65,18 +63,21 @@ class ProfileSetupViewModel: ObservableObject {
         email: String,
         username: String,
         password: String,
-        passwordValidation: String
+        passwordValidation: String,
+        searchFilter: FilterViewModel
     ) {
         guard let profileData = buildProfileData() else {
             return
         }
-        
+
         loginViewModel.registerUser(
             email: email,
             username: username,
             password: password,
             passwordValidation: passwordValidation,
-            profileData: profileData
+            profileData: profileData,
+            searchFilter: searchFilter
         )
     }
+
 }
