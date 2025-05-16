@@ -8,24 +8,26 @@
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
+import SwiftUI
 
 @MainActor
 class LoginViewModel: ObservableObject {
     @Published var user: User?
     @Published var errorMessage: String?
     @Published var isRegistrationInProgress = false
-    
+    @Published var profileImage: Image?
+
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
-    
+
     var isUserLoggedIn: Bool {
         self.user != nil
     }
-    
+
     init() {
         self.checkLoginState()
     }
-    
+
     func registerUser(
         email: String,
         username: String,
@@ -71,7 +73,8 @@ class LoginViewModel: ObservableObject {
                     shootingCategories: searchFilter.shootingCategories,
                     hasTattoos: searchFilter.hasTattoos,
                     hasPiercings: searchFilter.hasPiercings,
-                    registrationDate: Date()
+                    registrationDate: Date(),
+                    profileImageURL: nil
                 )
 
                 try firestore.collection("users").document(uid).setData(from: newUser)
@@ -86,10 +89,9 @@ class LoginViewModel: ObservableObject {
         }
     }
 
-    
     func loginUser(withEmail email: String, password: String) {
         self.errorMessage = nil
-        
+
         Task {
             do {
                 let result = try await auth.signIn(withEmail: email, password: password)
@@ -101,34 +103,41 @@ class LoginViewModel: ObservableObject {
             }
         }
     }
-    
+
     func logout() {
         do {
             try auth.signOut()
             self.user = nil
+            self.profileImage = nil
         } catch {
             errorMessage = "Abmelden fehlgeschlagen: \(error.localizedDescription)"
             print(error)
         }
     }
-    
+
     private func readUser(userId: String) {
         Task {
             do {
                 let document = try await firestore.collection("users").document(userId).getDocument()
                 self.user = try document.data(as: User.self)
+                if let imageURLString = self.user?.profileImageURL, let imageURL = URL(string: imageURLString) {
+                    await loadImage(from: imageURL)
+                } else {
+                    self.profileImage = nil
+                }
             } catch {
                 errorMessage = "Benutzer lesen fehlgeschlagen: \(error.localizedDescription)"
                 print(error)
             }
         }
     }
-    
+
     private func checkLoginState() {
         if let currentUser = auth.currentUser {
             self.readUser(userId: currentUser.uid)
         }
     }
+
     func validateRegistration(email: String, password: String, passwordValidation: String) -> Bool {
         if !email.contains("@") || !email.contains(".") {
             self.errorMessage = "Bitte gib eine gültige E-Mail-Adresse ein."
@@ -147,6 +156,37 @@ class LoginViewModel: ObservableObject {
 
         self.errorMessage = nil
         return true
+    }
+
+    private func loadImage(from url: URL) async {
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let uiImage = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.profileImage = Image(uiImage: uiImage)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.profileImage = nil
+                }
+            }
+        } catch {
+            print("Fehler beim Laden des Profilbildes: \(error)")
+            DispatchQueue.main.async {
+                self.profileImage = nil
+            }
+        }
+    }
+    func updateProfileImage(from urlString: String) async {
+        guard let url = URL(string: urlString) else { return }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let uiImage = UIImage(data: data) {
+                profileImage = Image(uiImage: uiImage)
+            }
+        } catch {
+            print("Fehler beim Laden des Profilbildes: \(error)")
+        }
     }
 
 }

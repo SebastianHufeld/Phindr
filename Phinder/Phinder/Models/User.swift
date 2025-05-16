@@ -27,7 +27,7 @@ struct User: Codable, Equatable {
     let hasTattoos: Bool
     let hasPiercings: Bool
     let registrationDate: Date
-
+    var profileImageURL: String?
     var age: Int {
         let calendar = Calendar.current
         return calendar.dateComponents([.year], from: birthdate, to: Date()).year ?? 0

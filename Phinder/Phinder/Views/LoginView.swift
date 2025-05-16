@@ -50,7 +50,7 @@ struct LoginView: View {
     }
 }
 
-#Preview {
-    LoginView()
-        .environmentObject(LoginViewModel())
-}
+//#Preview {
+//    LoginView()
+//        .environmentObject(LoginViewModel())
+//}

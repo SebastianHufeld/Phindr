@@ -24,6 +24,12 @@
     "%lld km" : {
 
     },
+    "Abbrechen" : {
+
+    },
+    "Adresse" : {
+
+    },
     "Alter" : {
 
     },
@@ -33,16 +39,22 @@
     "Ausloggen" : {
 
     },
+    "Benutzername" : {
+
+    },
     "Bereiche" : {
+
+    },
+    "Bild auswählen" : {
 
     },
     "Bis:" : {
 
     },
-    "Bitte gültigen Altersbereich eingeben." : {
+    "Divers" : {
 
     },
-    "Divers" : {
+    "E-Mail" : {
 
     },
     "Email" : {
@@ -55,6 +67,12 @@
 
     },
     "Erfahrung & Bereiche" : {
+
+    },
+    "Erfahrungslevel" : {
+
+    },
+    "Fehler" : {
 
     },
     "Fotograf" : {
@@ -73,6 +91,9 @@
 
     },
     "Hello, World!" : {
+
+    },
+    "Hinweis" : {
 
     },
     "Home" : {
@@ -96,6 +117,9 @@
     "Noch keinen Account? Jetzt Registrieren!" : {
 
     },
+    "OK" : {
+
+    },
     "Ort" : {
 
     },
@@ -103,6 +127,9 @@
 
     },
     "Passwort bestätigen" : {
+
+    },
+    "Persönliche Informationen" : {
 
     },
     "Persönliche Infos" : {
@@ -126,13 +153,34 @@
     "Profil bearbeiten" : {
 
     },
+    "Profilbild" : {
+
+    },
+    "Profilbild ändern" : {
+
+    },
+    "Rolle" : {
+
+    },
     "Semiprofi" : {
+
+    },
+    "Shooting-Kategorien" : {
 
     },
     "Shoots" : {
 
     },
+    "Speichere Profil..." : {
+
+    },
+    "Speichern" : {
+
+    },
     "Stadt" : {
+
+    },
+    "Straße" : {
 
     },
     "Straßenname" : {
@@ -142,6 +190,9 @@
 
     },
     "Suche" : {
+
+    },
+    "Suche nach" : {
 
     },
     "Suchergebnisse" : {
@@ -154,6 +205,9 @@
 
     },
     "Tattoos & Piercings" : {
+
+    },
+    "Ungültiger Altersbereich." : {
 
     },
     "Username" : {
@@ -172,6 +226,9 @@
 
     },
     "Weiter" : {
+
+    },
+    "Weitere Informationen" : {
 
     },
     "z. B. 18" : {
