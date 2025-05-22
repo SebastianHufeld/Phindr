@@ -133,9 +133,6 @@
     "Nachname" : {
 
     },
-    "Nachrichten" : {
-
-    },
     "Noch keinen Account? Jetzt Registrieren!" : {
 
     },
@@ -175,6 +172,9 @@
     "Profil bearbeiten" : {
 
     },
+    "Profil konnte nicht geladen werden." : {
+
+    },
     "Profilbild" : {
 
     },
@@ -188,9 +188,6 @@
 
     },
     "Shooting-Kategorien" : {
-
-    },
-    "Shoots" : {
 
     },
     "Speichere Profil..." : {

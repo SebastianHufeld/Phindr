@@ -16,20 +16,20 @@ struct TabBarView: View {
                     HomeView()
                 }
             }
-            Tab("Shoots", systemImage: "calendar") {
-                NavigationStack {
-                    ShootsView()
-                }
-            }
+//            Tab("Shoots", systemImage: "calendar") {
+//                NavigationStack {
+//                    ShootsView()
+//                }
+//            }
             Tab("Suche", systemImage: "magnifyingglass.circle.fill") {
                 NavigationStack {
                     SearchView()
                 }
             }
-            Tab("Nachrichten", systemImage: "message.fill") {
-                NavigationStack {
-                }
-            }
+//            Tab("Nachrichten", systemImage: "message.fill") {
+//                NavigationStack {
+//                }
+//            }
             Tab("Profil", systemImage: "person.crop.rectangle.fill") {
                 NavigationStack {
                     if let currentUser = currentUserViewModel.user {
