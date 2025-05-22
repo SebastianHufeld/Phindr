@@ -12,6 +12,7 @@ import FirebaseCore
 @main
 struct PhinderApp: App {
     @StateObject private var loginViewModel = LoginViewModel()
+    @StateObject private var currentUserViewModel = CurrentUserViewModel()
     
     init() {
         FirebaseConfiguration.shared.setLoggerLevel(.min)
@@ -21,6 +22,7 @@ struct PhinderApp: App {
         WindowGroup {
             if loginViewModel.isUserLoggedIn {
                 TabBarView()
+                    .environmentObject(currentUserViewModel)
             } else {
                 LoginView()
             }
