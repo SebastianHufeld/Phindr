@@ -86,8 +86,6 @@ class ProfileGalleryViewModel: ObservableObject {
             self.errorMessage = "Benutzer-ID zum Laden der Bilder fehlt."
             return
         }
-
-        // Die 'docRef'-Variable wurde entfernt, da sie nicht direkt verwendet wurde
         Firestore.firestore()
             .collection("users")
             .document(userId)
