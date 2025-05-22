@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Codable, Equatable {
+struct User: Codable, Equatable, Hashable{
     let userId: String
     let username: String
     let mail: String
@@ -32,4 +32,8 @@ struct User: Codable, Equatable {
         let calendar = Calendar.current
         return calendar.dateComponents([.year], from: birthdate, to: Date()).year ?? 0
     }
+}
+
+extension User: Identifiable {
+    var id: String { userId }
 }
