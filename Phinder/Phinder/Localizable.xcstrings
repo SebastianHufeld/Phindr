@@ -11,9 +11,6 @@
         }
       }
     },
-    "%@:" : {
-
-    },
     "%lld Jahre alt, %@" : {
       "localizations" : {
         "en" : {
@@ -52,10 +49,16 @@
     "Ausloggen" : {
 
     },
+    "Bearbeiten" : {
+
+    },
     "Benutzername" : {
 
     },
     "Bereiche" : {
+
+    },
+    "Beschreibung bearbeiten" : {
 
     },
     "Bild auswählen" : {
@@ -116,6 +119,30 @@
 
     },
     "Home" : {
+
+    },
+    "Instagram anzeigen" : {
+
+    },
+    "Instagram URL" : {
+
+    },
+    "Keine Kontaktdaten verfügbar." : {
+
+    },
+    "Kontakt E-Mail" : {
+
+    },
+    "Kontakt E-Mail anzeigen" : {
+
+    },
+    "Kontaktdaten" : {
+
+    },
+    "Kontaktdaten bearbeiten" : {
+
+    },
+    "Kontaktinformationen bearbeiten" : {
 
     },
     "Login" : {
@@ -190,6 +217,9 @@
     "Shooting-Kategorien" : {
 
     },
+    "Sichtbarkeit der Informationen" : {
+
+    },
     "Speichere Profil..." : {
 
     },
@@ -226,6 +256,12 @@
     "Tattoos & Piercings" : {
 
     },
+    "TikTok anzeigen" : {
+
+    },
+    "TikTok URL" : {
+
+    },
     "Ungültiger Altersbereich." : {
 
     },
@@ -239,6 +275,12 @@
 
     },
     "Wähle deine Rolle" : {
+
+    },
+    "Website anzeigen" : {
+
+    },
+    "Website URL" : {
 
     },
     "Weiblich" : {

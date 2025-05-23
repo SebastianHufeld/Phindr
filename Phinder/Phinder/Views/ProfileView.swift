@@ -45,7 +45,7 @@ struct ProfileView: View {
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
-                            ForEach(["Fotos", "Info"], id: \.self) { tab in
+                            ForEach(["Fotos", "Beschreibung", "Kontakt", "Info"], id: \.self) { tab in
                                 Button {
                                     selectedTab = tab
                                 } label: {
@@ -78,6 +78,10 @@ struct ProfileView: View {
                             .environmentObject(currentUserViewModel)
                     } else if selectedTab == "Info" {
                         ProfileInfoView(user: actualUser)
+                    } else if selectedTab == "Beschreibung" {
+                        ProfileDescriptionView(user: actualUser, isOwnProfile: isOwnProfile)
+                    } else if selectedTab == "Kontakt" {
+                        ProfileContactView(user: actualUser)
                     }
                 } else {
                     Text("Profil konnte nicht geladen werden.")
@@ -91,10 +95,4 @@ struct ProfileView: View {
     }
 }
 
-#Preview {
-    NavigationView {
-        ProfileView(user: nil)
-            .environmentObject(CurrentUserViewModel())
-            .environmentObject(LoginViewModel())
-    }
-}
+

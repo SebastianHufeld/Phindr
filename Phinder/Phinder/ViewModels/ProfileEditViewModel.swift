@@ -30,6 +30,11 @@ class ProfileEditViewModel: ObservableObject {
     @Published var shootingCategories: [String] = []
     @Published var hasTattoos: Bool = false
     @Published var hasPiercings: Bool = false
+    @Published var websiteURL: String = ""
+    @Published var instagramURL: String = ""
+    @Published var tiktokURL: String = ""
+    @Published var contactMail: String = ""
+
 
     @Published var photoPickerItem: PhotosPickerItem?
     @Published var profileImage: Image?
@@ -210,6 +215,7 @@ class ProfileEditViewModel: ObservableObject {
 
         isLoading = true
         errorMessage = nil
+
         if profileImageData != nil && (profileImageURL == nil || photoPickerItem != nil) {
             let success = await uploadProfileImage()
             if !success {
@@ -221,7 +227,6 @@ class ProfileEditViewModel: ObservableObject {
         }
 
         do {
-
             var userData: [String: Any] = [
                 "username": username,
                 "mail": mail,
@@ -239,9 +244,12 @@ class ProfileEditViewModel: ObservableObject {
                 "experienceLevel": experienceLevel,
                 "shootingCategories": shootingCategories,
                 "hasTattoos": hasTattoos,
-                "hasPiercings": hasPiercings
+                "hasPiercings": hasPiercings,
+                "websiteURL": websiteURL,
+                "instagramURL": instagramURL,
+                "tiktokURL": tiktokURL,
+                "contactMail": contactMail
             ]
-
 
             if let imageURL = profileImageURL {
                 userData["profileImageURL"] = imageURL
@@ -252,6 +260,7 @@ class ProfileEditViewModel: ObservableObject {
             if let currentUser = auth.currentUser, currentUser.email != mail {
                 try await currentUser.sendEmailVerification(beforeUpdatingEmail: mail)
             }
+
             let updatedUser = User(
                 userId: userId,
                 username: username,
@@ -272,13 +281,18 @@ class ProfileEditViewModel: ObservableObject {
                 hasTattoos: hasTattoos,
                 hasPiercings: hasPiercings,
                 registrationDate: user?.registrationDate ?? Date(),
-                profileImageURL: profileImageURL
+                profileImageURL: profileImageURL,
+                websiteURL: websiteURL,
+                instagramURL: instagramURL,
+                tiktokURL: tiktokURL,
+                contactEmail: contactMail
             )
+
             loginViewModel.user = updatedUser
+
             if let imageURL = profileImageURL {
                 await loginViewModel.updateProfileImage(from: imageURL)
             }
-
 
             showAlert = true
             alertMessage = "Profil erfolgreich aktualisiert!"
@@ -291,6 +305,7 @@ class ProfileEditViewModel: ObservableObject {
 
         isLoading = false
     }
+
 
     func toggleCategory(_ category: String) {
         if shootingCategories.contains(category) {
