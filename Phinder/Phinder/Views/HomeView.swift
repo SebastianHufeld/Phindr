@@ -6,49 +6,49 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct HomeView: View {
-    @EnvironmentObject private var loginViewModel: LoginViewModel
+    @EnvironmentObject private var currentUserViewModel: CurrentUserViewModel
+    @StateObject private var homeViewModel = HomeViewModel()
+    @StateObject private var filterViewModel = FilterViewModel()
     @State private var showProfileEdit = false
-
+    @State private var showFilter = false
+    @State private var path = NavigationPath()
+    
     var body: some View {
-        HStack {
-            ZStack {
-                if let image = loginViewModel.profileImage {
-                    image
-                        .resizable()
-                        .clipShape(Circle())
-                        .scaledToFit()
-                        .frame(width: 150, height: 150)
-                } else {
-                    Image(systemName: "person.fill")
-                        .resizable()
-                        .clipShape(Circle())
-                        .scaledToFit()
-                        .frame(width: 150, height: 150)
+        NavigationStack(path: $path) {
+            VStack {
+                HomeHeaderView(
+                    showProfileEdit: $showProfileEdit
+                )
+                
+//                FilterButtonView(showFilter: $showFilter)
+//                    .sheet(isPresented: $showFilter) {
+//                        FilterView(viewModel: filterViewModel)
+//                        Text("Nutzer gefunden: \(homeViewModel.nearbyUsers.count)")
+//                            .padding()
+//                            .foregroundColor(.blue)
+//                    }
+                
+                UserGridView(users: homeViewModel.nearbyUsers)
+                
+                Spacer()
+            }
+            .onAppear {
+                Task {
+                    guard let user = currentUserViewModel.user,
+                          let lat = user.latitude,
+                          let lon = user.longitude else {
+                        print("⚠️ Kein gültiger User oder Standort")
+                        return
+                    }
+                    await homeViewModel.loadNearbyUsers(user: user, distance: 200)
                 }
             }
-
-            VStack(alignment: .leading) {
-                Text("Hallo \(loginViewModel.user?.firstName ?? "Gast")")
-                    .font(.title2)
-
-                Button("Profil bearbeiten") {
-                    showProfileEdit = true
-                }
-                .buttonStyle(.bordered)
-
-                Button("Ausloggen") {
-                    loginViewModel.logout()
-                }
-            }
-
-            Spacer()
-        }
-        .padding()
-        .sheet(isPresented: $showProfileEdit) {
-            if let user = loginViewModel.user {
-                ProfileEditView(user: user, loginViewModel: loginViewModel)
+            
+            .navigationDestination(for: User.self) { user in
+                ProfileView(user: user)
             }
         }
     }

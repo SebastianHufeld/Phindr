@@ -50,6 +50,7 @@ struct SignUpView: View {
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
         }
+        .tint(Color("PhinderGreen"))
         .sheet(isPresented: $showProfileSetup) {
             ProfileSetupView(
                 email: email,

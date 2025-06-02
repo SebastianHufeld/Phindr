@@ -15,12 +15,10 @@ struct ProfilePhotosView: View {
     @EnvironmentObject var currentUserViewModel: CurrentUserViewModel
 
     @State private var selectedIdentifiableURL: IdentifiableURL? = nil
+    @State private var showDeleteAlert = false
+    @State private var deleteIndex: Int?
 
-    var gridItems: [GridItem] = [
-        GridItem(.fixed(120), spacing: 2),
-        GridItem(.fixed(120), spacing: 2),
-        GridItem(.fixed(120), spacing: 2)
-    ]
+    var gridItems: [GridItem] = Array(repeating: .init(.fixed(120), spacing: 2), count: 3)
 
     var body: some View {
         VStack(spacing: 0) {
@@ -57,33 +55,44 @@ struct ProfilePhotosView: View {
                     .onTapGesture {
                         selectedIdentifiableURL = IdentifiableURL(urlString: url, index: index)
                     }
+                    .onLongPressGesture {
+                        if isOwnProfile {
+                            confirmDeletion(for: index)
+                        }
+                    }
                 }
             }
             .padding(.horizontal, 1)
             .padding(.vertical, 1)
-
-            if profileGalleryViewModel.isUploading {
-                ProgressView("Bild wird hochgeladen…")
-                    .padding()
-            } else if let errorMessage = profileGalleryViewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .padding()
-            }
         }
         .onAppear {
-            profileGalleryViewModel.loadUserImagesFromFirestore(for: user)
+            loadPhotos()
         }
         .onChange(of: profileGalleryViewModel.photoPickerItem) {
-            if isOwnProfile, let userId = currentUserViewModel.user?.userId {
-                Task {
-                    await profileGalleryViewModel.loadAndUploadImage(userId: userId)
+            guard let item = profileGalleryViewModel.photoPickerItem else { return }
+
+            Task {
+                do {
+                    let data = try await item.loadTransferable(type: Data.self)
+
+                    if let data, let image = UIImage(data: data) {
+                        profileGalleryViewModel.selectedImageData = profileGalleryViewModel.compressImageIfNeeded(data, from: image)
+
+                        if isOwnProfile, let userId = currentUserViewModel.user?.userId {
+                            await profileGalleryViewModel.loadAndUploadImage(userId: userId)
+                            profileGalleryViewModel.photoPickerItem = nil
+                        }
+                    } else {
+                        profileGalleryViewModel.showError("Kein Bild vorhanden oder nicht lesbar.")
+                    }
+                } catch {
+                    profileGalleryViewModel.showError("Fehler beim Laden des Bildes: \(error.localizedDescription)")
                 }
             }
         }
         .onChange(of: user?.userId) { oldId, newId in
             if oldId != newId {
-                profileGalleryViewModel.loadUserImagesFromFirestore(for: user)
+                loadPhotos()
             }
         }
         .fullScreenCover(item: $selectedIdentifiableURL) { identifiableURL in
@@ -94,5 +103,46 @@ struct ProfilePhotosView: View {
                 selectedIdentifiableURL = nil
             }
         }
+        .sheet(isPresented: $profileGalleryViewModel.showUploadSheet) {
+            VStack(spacing: 20) {
+                if profileGalleryViewModel.isUploading {
+                    ProgressView("Bild wird hochgeladen…")
+                        .padding()
+                } else if profileGalleryViewModel.isFinishedUploading {
+                    Text("Upload abgeschlossen")
+                        .font(.headline)
+                        .padding()
+                }
+            }
+            .background(Color(.systemBackground))
+        }
+        .alert("Fehler", isPresented: $profileGalleryViewModel.showErrorAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(profileGalleryViewModel.errorMessage ?? "Ein Fehler ist aufgetreten.")
+        }
+        .alert("Bild löschen?", isPresented: $showDeleteAlert) {
+            Button("Löschen", role: .destructive) {
+                if let index = deleteIndex, let userId = currentUserViewModel.user?.userId {
+                    Task {
+                        profileGalleryViewModel.deleteImage(at: index, userId: userId)
+                        loadPhotos()
+                    }
+                }
+            }
+            Button("Abbrechen", role: .cancel) {}
+        }
+    }
+
+    private func loadPhotos() {
+        guard let userId = user?.userId else { return }
+        Task {
+            await profileGalleryViewModel.loadUserImagesFromFirestore(for: userId)
+        }
+    }
+
+    private func confirmDeletion(for index: Int) {
+        deleteIndex = index
+        showDeleteAlert = true
     }
 }

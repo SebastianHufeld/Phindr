@@ -1,0 +1,8 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '18.0'
+
+target 'Phinder' do
+  use_frameworks!
+  pod 'OpenCageSDK'
+end
+

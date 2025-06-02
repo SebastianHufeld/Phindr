@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17CE8AFE547392B1AE60AD01 /* Pods_Phinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4336C14717EE27D39E66C7 /* Pods_Phinder.framework */; };
 		409E26B52DB8D33200872609 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 409E26B42DB8D32800872609 /* .swiftlint.yml */; };
 		409F03732DBFD87B009C3575 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 409F03722DBFD87B009C3575 /* FirebaseAnalytics */; };
 		409F03752DBFD87B009C3575 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 409F03742DBFD87B009C3575 /* FirebaseAuth */; };
@@ -18,6 +19,9 @@
 /* Begin PBXFileReference section */
 		409E26B42DB8D32800872609 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		40E738662DB780ED001D6397 /* Phinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Phinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F4336C14717EE27D39E66C7 /* Pods_Phinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Phinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8ED4035D2432B53C2C59C814 /* Pods-Phinder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Phinder.release.xcconfig"; path = "Target Support Files/Pods-Phinder/Pods-Phinder.release.xcconfig"; sourceTree = "<group>"; };
+		ECFBEBEF3A0DF5EC65746030 /* Pods-Phinder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Phinder.debug.xcconfig"; path = "Target Support Files/Pods-Phinder/Pods-Phinder.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -38,18 +42,30 @@
 				409F03772DBFD87B009C3575 /* FirebaseCore in Frameworks */,
 				409F037B2DBFD87B009C3575 /* FirebaseFirestore in Frameworks */,
 				409F03752DBFD87B009C3575 /* FirebaseAuth in Frameworks */,
+				17CE8AFE547392B1AE60AD01 /* Pods_Phinder.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1AC270FB26235F8563D6D2A3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				ECFBEBEF3A0DF5EC65746030 /* Pods-Phinder.debug.xcconfig */,
+				8ED4035D2432B53C2C59C814 /* Pods-Phinder.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		40E7385D2DB780ED001D6397 = {
 			isa = PBXGroup;
 			children = (
 				409E26B42DB8D32800872609 /* .swiftlint.yml */,
 				40E738682DB780ED001D6397 /* Phinder */,
 				40E738672DB780ED001D6397 /* Products */,
+				1AC270FB26235F8563D6D2A3 /* Pods */,
+				EB27460BA91412FD61659B78 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +77,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		EB27460BA91412FD61659B78 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4F4336C14717EE27D39E66C7 /* Pods_Phinder.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -68,10 +92,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 40E738762DB780F0001D6397 /* Build configuration list for PBXNativeTarget "Phinder" */;
 			buildPhases = (
+				2614A9FBDDB4FD37D8DC9591 /* [CP] Check Pods Manifest.lock */,
 				40E738622DB780ED001D6397 /* Sources */,
 				40E738632DB780ED001D6397 /* Frameworks */,
 				40E738642DB780ED001D6397 /* Resources */,
 				409E26B32DB8D31800872609 /* ShellScript */,
+				17BC99CA41FE5BD8EB25F5DC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -142,6 +168,45 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		17BC99CA41FE5BD8EB25F5DC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Phinder/Pods-Phinder-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Phinder/Pods-Phinder-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Phinder/Pods-Phinder-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2614A9FBDDB4FD37D8DC9591 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Phinder-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		409E26B32DB8D31800872609 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -295,6 +360,7 @@
 		};
 		40E738772DB780F0001D6397 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ECFBEBEF3A0DF5EC65746030 /* Pods-Phinder.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -324,6 +390,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -331,6 +398,7 @@
 		};
 		40E738782DB780F0001D6397 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8ED4035D2432B53C2C59C814 /* Pods-Phinder.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -360,6 +428,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

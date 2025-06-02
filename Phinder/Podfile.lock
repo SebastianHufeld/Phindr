@@ -1,0 +1,16 @@
+PODS:
+  - OpenCageSDK (0.3.0)
+
+DEPENDENCIES:
+  - OpenCageSDK
+
+SPEC REPOS:
+  trunk:
+    - OpenCageSDK
+
+SPEC CHECKSUMS:
+  OpenCageSDK: c20e86c87d5257953a854dab5e08e43ceee1c47e
+
+PODFILE CHECKSUM: 7d295da2297e546577edce54fb46ff3d5c11f308
+
+COCOAPODS: 1.16.2

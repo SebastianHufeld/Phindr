@@ -13,110 +13,114 @@ import UIKit
 @MainActor
 class ProfileGalleryViewModel: ObservableObject {
     @Published var photoURLs: [String] = []
-    @Published var photoPickerItem: PhotosPickerItem? {
-        didSet {
-            Task {
-                if let item = photoPickerItem {
-                    do {
-                        if let data = try await item.loadTransferable(type: Data.self) {
-                            self.selectedImageData = compressImageIfNeeded(data)
-                        }
-                    } catch {
-                        self.errorMessage = "Bild konnte nicht geladen werden: \(error.localizedDescription)"
-                    }
-                }
-            }
-        }
-    }
+    @Published var photoPickerItem: PhotosPickerItem?
     @Published var selectedImageData: Data?
     @Published var isUploading = false
+    @Published var showUploadSheet = false
     @Published var errorMessage: String?
+    @Published var showErrorAlert = false
+    @Published var isFinishedUploading = false
 
-    let imgurRepository = ImgurAPIRepository()
+    private let firestore = Firestore.firestore()
+    private let imgurRepository = ImgurAPIRepository()
 
     func loadAndUploadImage(userId: String) async {
         guard let imageData = selectedImageData else {
-            errorMessage = "Kein Bild ausgewählt."
+            errorMessage = "Kein Bild verfügbar."
+            showErrorAlert = true
             return
         }
 
         isUploading = true
-        errorMessage = nil
-        defer { isUploading = false }
+        showUploadSheet = true
+        isFinishedUploading = false
 
         do {
             let response = try await imgurRepository.uploadImage(imageData)
+            let imageUrl = response.data.link.absoluteString
 
-            let imageURL = response.data.link.absoluteString
+            try await firestore
+                .collection("users")
+                .document(userId)
+                .collection("photos")
+                .addDocument(data: [
+                    "url": imageUrl,
+                    "uploadedAt": Timestamp(date: Date())
+                ])
 
-            let photoData: [String: Any] = [
-                "url": imageURL,
-                "uploadedAt": FieldValue.serverTimestamp()
-            ]
-
-            try await Task.detached {
-                try await Firestore.firestore()
-                    .collection("users")
-                    .document(userId)
-                    .collection("photos")
-                    .addDocument(data: photoData)
-            }.value
-
-            await MainActor.run {
-                self.photoURLs.append(imageURL)
-                self.selectedImageData = nil
-                self.photoPickerItem = nil
-            }
+            await loadUserImagesFromFirestore(for: userId)
+            isFinishedUploading = true
+            showUploadSheet = false
+            selectedImageData = nil
+            photoPickerItem = nil
 
         } catch {
-            await MainActor.run {
-                self.errorMessage = "Upload fehlgeschlagen: \(error.localizedDescription)"
-                print("Upload Error: \(error)")
-            }
+            errorMessage = "Bild konnte nicht hochgeladen werden: \(error.localizedDescription)"
+            showErrorAlert = true
+            isUploading = false
+            showUploadSheet = false
         }
     }
 
-    func compressImageIfNeeded(_ data: Data) -> Data {
-        guard data.count > 1_000_000, let uiImage = UIImage(data: data) else { return data }
-        return uiImage.jpegData(compressionQuality: 0.5) ?? data
+    func compressImageIfNeeded(_ data: Data, from image: UIImage) -> Data {
+        if data.count > 1_000_000 {
+            return image.jpegData(compressionQuality: 0.5) ?? data
+        } else {
+            return data
+        }
     }
 
-    func loadUserImagesFromFirestore(for user: User?) {
-        guard let userId = user?.userId else {
-            self.errorMessage = "Benutzer-ID zum Laden der Bilder fehlt."
-            return
+    func loadUserImagesFromFirestore(for userId: String) async {
+        do {
+            let snapshot = try await firestore
+                .collection("users")
+                .document(userId)
+                .collection("photos")
+                .order(by: "uploadedAt", descending: true)
+                .getDocuments()
+
+            let urls = snapshot.documents.compactMap { $0.data()["url"] as? String }
+            self.photoURLs = urls
+            self.errorMessage = nil
+        } catch {
+            showError("Fehler beim Laden der Bilder: \(error.localizedDescription)")
         }
-        Firestore.firestore()
+    }
+
+    func showError(_ message: String) {
+        errorMessage = message
+        showErrorAlert = true
+    }
+    
+    func deleteImage(at index: Int, userId: String) {
+        guard index >= 0 && index < photoURLs.count else { return }
+
+        let urlToDelete = photoURLs[index]
+
+        firestore
             .collection("users")
             .document(userId)
             .collection("photos")
-            .order(by: "uploadedAt", descending: true)
-            .getDocuments { [weak self] snapshot, error in
-                guard let self = self else { return }
-
+            .whereField("url", isEqualTo: urlToDelete)
+            .getDocuments { snapshot, error in
                 if let error = error {
-                    DispatchQueue.main.async {
-                        self.errorMessage = "Fehler beim Laden der Benutzerbilder: \(error.localizedDescription)"
-                        print("Firestore Image Load Error: \(error)")
-                    }
+                    self.showError("Fehler beim Löschen: \(error.localizedDescription)")
                     return
                 }
 
-                guard let documents = snapshot?.documents else {
-                    DispatchQueue.main.async {
-                        self.photoURLs = []
-                        print("Keine Bilder in der Unterkollektion 'photos' gefunden.")
-                    }
+                guard let document = snapshot?.documents.first else {
+                    self.showError("Bilddokument nicht gefunden.")
                     return
                 }
 
-                let urls = documents.compactMap { doc -> String? in
-                    return doc.data()["url"] as? String
-                }
-
-                DispatchQueue.main.async {
-                    self.photoURLs = urls
-                    self.errorMessage = nil
+                document.reference.delete { error in
+                    if let error = error {
+                        self.showError("Fehler beim Löschen: \(error.localizedDescription)")
+                    } else {
+                        DispatchQueue.main.async {
+                            self.photoURLs.remove(at: index)
+                        }
+                    }
                 }
             }
     }

@@ -14,7 +14,9 @@ struct SearchView: View {
     @State private var selectedSearchType: SearchType = .model
     @State private var location: String = ""
     @State private var distance: Double = 50
-    
+    @State private var showValidationAlert = false
+    @State private var validationMessage = ""
+
     @State private var searchResults: [User] = []
     @State private var path = NavigationPath()
     
@@ -26,13 +28,20 @@ struct SearchView: View {
                         TextField("Ort", text: $location)
                             .textFieldStyle(.roundedBorder)
                             .padding(.horizontal)
-                        
+                            .onChange(of: location) {
+                                filterViewModel.location = location
+                            }
+
                         VStack(alignment: .leading) {
                             Text("Entfernung")
                             Slider(value: $distance, in: 0...200, step: 1)
                             Text("\(Int(distance)) km")
-                        }.padding(.horizontal)
-                        
+                        }
+                        .padding(.horizontal)
+                        .onChange(of: distance) {
+                            filterViewModel.distance = distance
+                        }
+
                         Picker("Suche nach", selection: $selectedSearchType) {
                             ForEach(SearchType.allCases) { type in
                                 Text(type.rawValue).tag(type)
@@ -40,23 +49,24 @@ struct SearchView: View {
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal)
-                        
+                        .onChange(of: selectedSearchType) {
+                            filterViewModel.selectedSearchType = selectedSearchType
+                        }
+
                         if selectedSearchType == .model {
                             AgeRangeSelectorView(viewModel: filterViewModel)
                                 .padding(.horizontal)
                         }
-                        
+
                         if selectedSearchType != .studio {
                             GenderSelectView(viewModel: filterViewModel)
                                 .padding(.horizontal)
-                            
                             ExperienceLevelSelectView(viewModel: filterViewModel)
                                 .padding(.horizontal)
-                            
                             CategoriesSelectView(viewModel: filterViewModel)
                                 .padding(.horizontal)
                         }
-                        
+
                         if selectedSearchType == .model {
                             Toggle("Tattoos", isOn: $filterViewModel.hasTattoos)
                                 .padding(.horizontal)
@@ -73,12 +83,13 @@ struct SearchView: View {
                         Task {
                             if filterViewModel.isValid() {
                                 await searchViewModel.searchUsers(with: filterViewModel)
-                                searchResults = searchViewModel.matchingUsers
-                                // Hier navigieren wir zu einem String-Literal "searchResultsList"
-                                // Das wird dann in der .navigationDestination unten abgefangen
-                                path.append("searchResultsList")
+                                DispatchQueue.main.async {
+                                    searchResults = searchViewModel.matchingUsers
+                                    path.append("searchResultsList")
+                                }
                             } else {
-                                print("Bitte alle Pflichtfelder ausfüllen")
+                                validationMessage = filterViewModel.missingFieldsMessage()
+                                showValidationAlert = true
                             }
                         }
                     }) {
@@ -86,16 +97,19 @@ struct SearchView: View {
                     }
                 }
             }
-            // Neue navigationDestination für die SearchResultView
             .navigationDestination(for: String.self) { value in
                 if value == "searchResultsList" {
                     SearchResultView(users: searchResults)
                 }
             }
-            // Bestehende navigationDestination für die ProfileView
             .navigationDestination(for: User.self) { user in
                 ProfileView(user: user)
             }
+        }
+        .alert("Fehlende Angaben", isPresented: $showValidationAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(validationMessage)
         }
     }
 }

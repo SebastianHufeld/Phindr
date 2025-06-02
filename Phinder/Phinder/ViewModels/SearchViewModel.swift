@@ -14,11 +14,14 @@ class SearchViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var users: [User] = []
+    
     private let firestoreDb = Firestore.firestore()
+
     func searchUsers(with filter: FilterViewModel) async {
         isLoading = true
         errorMessage = nil
         var query: Query = firestoreDb.collection("users")
+
         if !filter.gender.isEmpty {
             query = query.whereField("gender", isEqualTo: filter.gender)
         }
@@ -34,13 +37,21 @@ class SearchViewModel: ObservableObject {
         if !filter.shootingCategories.isEmpty {
             query = query.whereField("shootingCategories", arrayContainsAny: filter.shootingCategories)
         }
+        if !filter.location.isEmpty {
+            query = query.whereField("city", isEqualTo: filter.location)
+        }
+
         do {
             let snapshot = try await query.getDocuments()
             var users = try snapshot.documents.map { try $0.data(as: User.self) }
-            users = users.filter { user in
-                let age = user.age
-                return age >= Int(filter.minAge ?? 18) && age <= Int(filter.maxAge ?? 99)
+
+            if let minAge = filter.minAge, let maxAge = filter.maxAge {
+                users = users.filter { user in
+                    let age = user.age
+                    return age >= minAge && age <= maxAge
+                }
             }
+
             self.matchingUsers = users
         } catch {
             self.errorMessage = "Fehler bei Suche: \(error.localizedDescription)"
@@ -48,6 +59,7 @@ class SearchViewModel: ObservableObject {
         }
         isLoading = false
     }
+
     func performSearch(
         with filter: FilterViewModel,
         onSuccess: (([User]) -> Void)? = nil,
@@ -63,3 +75,4 @@ class SearchViewModel: ObservableObject {
         }
     }
 }
+

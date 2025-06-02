@@ -33,10 +33,14 @@ struct User: Codable, Equatable, Hashable {
     var instagramURL: String?
     var tiktokURL: String?
     var contactEmail: String?
+    let latitude: Double?
+    let longitude: Double?
+
     var age: Int {
         let calendar = Calendar.current
         return calendar.dateComponents([.year], from: birthdate, to: Date()).year ?? 0
     }
+
     var websiteAsURL: URL? {
         guard let urlString = websiteURL, let url = URL(string: urlString) else { return nil }
         return url

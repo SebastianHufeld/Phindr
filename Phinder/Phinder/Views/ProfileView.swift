@@ -52,7 +52,8 @@ struct ProfileView: View {
                                     Text(tab)
                                         .padding()
                                         .frame(maxWidth: .infinity)
-                                        .background(selectedTab == tab ? Color(red: 0.96, green: 0.91, blue: 0.70).opacity(0.8) : Color.gray.opacity(0.1))
+                                        .background(selectedTab == tab ? Color("PhinderGreen").opacity(0.8) : Color.gray.opacity(0.1))
+                                        .foregroundColor(selectedTab == tab ? .white : .primary)
                                         .cornerRadius(10)
                                 }
                                 .foregroundStyle(.primary)

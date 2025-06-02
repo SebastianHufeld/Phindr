@@ -1,2 +1,9 @@
+# .swiftlint.yml
+excluded:
+  - OpenCage/OCAnnotation.swift
+  - OpenCage/OCGeoObject.swift
+  - OpenCage/OCGeoResponse.swift
+  - OpenCage/OCNetworking.swift
+
 
 

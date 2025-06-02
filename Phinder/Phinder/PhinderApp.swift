@@ -11,13 +11,17 @@ import FirebaseCore
 
 @main
 struct PhinderApp: App {
-    @StateObject private var loginViewModel = LoginViewModel()
     @StateObject private var currentUserViewModel = CurrentUserViewModel()
-    
+    @StateObject private var loginViewModel: LoginViewModel
+
     init() {
         FirebaseConfiguration.shared.setLoggerLevel(.min)
         FirebaseApp.configure()
+        let currentUserVM = CurrentUserViewModel()
+        _currentUserViewModel = StateObject(wrappedValue: currentUserVM)
+        _loginViewModel = StateObject(wrappedValue: LoginViewModel(currentUserViewModel: currentUserVM))
     }
+
     var body: some Scene {
         WindowGroup {
             if loginViewModel.isUserLoggedIn {
@@ -30,3 +34,5 @@ struct PhinderApp: App {
         .environmentObject(loginViewModel)
     }
 }
+
+

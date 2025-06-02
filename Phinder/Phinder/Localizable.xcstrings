@@ -11,16 +11,6 @@
         }
       }
     },
-    "%lld Jahre alt, %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld Jahre alt, %2$@"
-          }
-        }
-      }
-    },
     "%lld Jahre, %@" : {
       "localizations" : {
         "en" : {
@@ -43,7 +33,13 @@
     "Alter" : {
 
     },
+    "Alter unbekannt, %@" : {
+
+    },
     "Anfänger" : {
+
+    },
+    "Anwenden" : {
 
     },
     "Ausloggen" : {
@@ -62,6 +58,9 @@
 
     },
     "Bild auswählen" : {
+
+    },
+    "Bild löschen?" : {
 
     },
     "Bild wird hochgeladen…" : {
@@ -94,7 +93,13 @@
     "Erfahrungslevel" : {
 
     },
+    "Fehlende Angaben" : {
+
+    },
     "Fehler" : {
+
+    },
+    "Filter Optionen" : {
 
     },
     "Fotograf" : {
@@ -112,9 +117,6 @@
     "Hausnummer" : {
 
     },
-    "Hello, World!" : {
-
-    },
     "Hinweis" : {
 
     },
@@ -125,6 +127,9 @@
 
     },
     "Instagram URL" : {
+
+    },
+    "Keine Ergebnisse gefunden." : {
 
     },
     "Keine Kontaktdaten verfügbar." : {
@@ -146,6 +151,9 @@
 
     },
     "Login" : {
+
+    },
+    "Löschen" : {
 
     },
     "Männlich" : {
@@ -263,6 +271,9 @@
 
     },
     "Ungültiger Altersbereich." : {
+
+    },
+    "Upload abgeschlossen" : {
 
     },
     "Username" : {

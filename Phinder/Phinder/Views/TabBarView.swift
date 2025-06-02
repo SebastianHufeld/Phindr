@@ -38,7 +38,7 @@ struct TabBarView: View {
                 }
             }
         }
-        .tint((Color(red: 0.96, green: 0.91, blue: 0.70 )))
+        .tint(Color(red: 0.33, green: 0.46, blue: 0.33))
     }
 }
 

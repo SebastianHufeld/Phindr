@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EditContactView: View {
     @EnvironmentObject var currentUserViewModel: CurrentUserViewModel
-    @Binding var user: User? // Behalten Sie dies als optional bei, siehe Erklärung unten
+    @Binding var user: User?
 
     @Binding var showContactEmail: Bool
     @Binding var showWebsite: Bool

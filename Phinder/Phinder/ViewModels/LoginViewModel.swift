@@ -9,9 +9,13 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 import SwiftUI
+import CoreLocation
+
 
 @MainActor
 class LoginViewModel: ObservableObject {
+    let currentUserViewModel: CurrentUserViewModel
+    
     @Published var user: User?
     @Published var errorMessage: String?
     @Published var isRegistrationInProgress = false
@@ -24,9 +28,10 @@ class LoginViewModel: ObservableObject {
         self.user != nil
     }
 
-    init() {
-        self.checkLoginState()
-    }
+    init(currentUserViewModel: CurrentUserViewModel) {
+            self.currentUserViewModel = currentUserViewModel
+            self.checkLoginState()
+        }
 
     func registerUser(
         email: String,
@@ -51,6 +56,9 @@ class LoginViewModel: ObservableObject {
 
         Task {
             do {
+                let fullAddress = "\(profileData.streetName) \(profileData.houseNumber), \(profileData.postalCode) \(profileData.city)"
+                let coordinates = try await fetchCoordinates(for: fullAddress)
+
                 let result = try await auth.createUser(withEmail: email, password: password)
                 let uid = result.user.uid
 
@@ -74,7 +82,9 @@ class LoginViewModel: ObservableObject {
                     hasTattoos: searchFilter.hasTattoos,
                     hasPiercings: searchFilter.hasPiercings,
                     registrationDate: Date(),
-                    profileImageURL: nil
+                    profileImageURL: nil,
+                    latitude: coordinates?.latitude,
+                    longitude: coordinates?.longitude
                 )
 
                 try firestore.collection("users").document(uid).setData(from: newUser)
@@ -83,11 +93,12 @@ class LoginViewModel: ObservableObject {
 
             } catch {
                 self.errorMessage = "Registrierung fehlgeschlagen: \(error.localizedDescription)"
-                print(error)
+                self.isRegistrationInProgress = false
+                print("Registrierung fehlgeschlagen: \(error)")
             }
-            self.isRegistrationInProgress = false
         }
     }
+
 
     func loginUser(withEmail email: String, password: String) {
         self.errorMessage = nil
@@ -97,6 +108,7 @@ class LoginViewModel: ObservableObject {
                 let result = try await auth.signIn(withEmail: email, password: password)
                 let authUserId = result.user.uid
                 self.readUser(userId: authUserId)
+                await currentUserViewModel.fetchCurrentUser()
             } catch {
                 errorMessage = "Login fehlgeschlagen: \(error.localizedDescription)"
                 print(error)
@@ -109,6 +121,7 @@ class LoginViewModel: ObservableObject {
             try auth.signOut()
             self.user = nil
             self.profileImage = nil
+            currentUserViewModel.user = nil
         } catch {
             errorMessage = "Abmelden fehlgeschlagen: \(error.localizedDescription)"
             print(error)
@@ -159,19 +172,22 @@ class LoginViewModel: ObservableObject {
     }
 
     private func loadImage(from url: URL) async {
+        print("loadImage: Versuche Bild von URL zu laden: \(url)")
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let uiImage = UIImage(data: data) {
                 DispatchQueue.main.async {
                     self.profileImage = Image(uiImage: uiImage)
+                    print("loadImage: Bild erfolgreich geladen und profileImage gesetzt.")
                 }
             } else {
                 DispatchQueue.main.async {
                     self.profileImage = nil
+                    print("loadImage: Konnte kein UIImage aus den Daten erstellen.")
                 }
             }
         } catch {
-            print("Fehler beim Laden des Profilbildes: \(error)")
+            print("loadImage: Fehler beim Laden des Profilbildes: \(error.localizedDescription)")
             DispatchQueue.main.async {
                 self.profileImage = nil
             }
@@ -186,6 +202,20 @@ class LoginViewModel: ObservableObject {
             }
         } catch {
             print("Fehler beim Laden des Profilbildes: \(error)")
+        }
+    }
+    private func fetchCoordinates(for address: String) async throws -> CLLocationCoordinate2D? {
+        let geocoder = CLGeocoder()
+        return try await withCheckedThrowingContinuation { continuation in
+            geocoder.geocodeAddressString(address) { placemarks, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else if let location = placemarks?.first?.location {
+                    continuation.resume(returning: location.coordinate)
+                } else {
+                    continuation.resume(returning: nil)
+                }
+            }
         }
     }
 

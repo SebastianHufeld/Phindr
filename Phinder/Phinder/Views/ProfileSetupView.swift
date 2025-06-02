@@ -32,7 +32,8 @@ struct ProfileSetupView: View {
                     Text("Divers").tag("Divers")
                 }
 
-                DatePicker("Geburtsdatum", selection: $filterViewModel.birthdate, displayedComponents: .date)
+                DatePicker("Geburtsdatum", selection: $filterViewModel.birthdate, in: ...Calendar.current.date(byAdding: .year, value: -18, to: Date())!, displayedComponents: .date)
+
             }
             
             Section(header: Text("Erfahrung & Bereiche")) {
@@ -95,7 +96,7 @@ struct ProfileSetupView: View {
             .buttonStyle(.borderedProminent)
             .disabled(loginViewModel.isRegistrationInProgress)
         }
-        
+        .tint(Color("PhinderGreen"))
         .onChange(of: loginViewModel.user) {
             if loginViewModel.user != nil {
                 dismiss()

@@ -43,6 +43,7 @@ struct LoginView: View {
             }
             .padding(.vertical)
         }
+        .tint(Color("PhinderGreen"))
         .sheet(isPresented: $showSignUpSheet) {
             SignUpView()
                 .presentationDragIndicator(.visible)

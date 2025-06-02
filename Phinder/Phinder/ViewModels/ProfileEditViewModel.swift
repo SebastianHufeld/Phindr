@@ -10,6 +10,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import SwiftUI
 import PhotosUI
+import CoreLocation
 
 @MainActor
 class ProfileEditViewModel: ObservableObject {
@@ -34,14 +35,11 @@ class ProfileEditViewModel: ObservableObject {
     @Published var instagramURL: String = ""
     @Published var tiktokURL: String = ""
     @Published var contactMail: String = ""
-
-
     @Published var photoPickerItem: PhotosPickerItem?
     @Published var profileImage: Image?
     @Published var profileImageData: Data?
     @Published var profileImageURL: String?
     @Published var isUploadingImage = false
-
     @Published var isLoading = false
     @Published var showAlert = false
     @Published var alertMessage = ""
@@ -65,7 +63,6 @@ class ProfileEditViewModel: ObservableObject {
 
     private func loadUserData() {
         guard let user = user else { return }
-
         username = user.username
         mail = user.mail
         firstName = user.firstName
@@ -108,12 +105,10 @@ class ProfileEditViewModel: ObservableObject {
         Task {
             do {
                 guard let item = photoPickerItem else { return }
-
                 guard let data = try await item.loadTransferable(type: Data.self) else {
                     errorMessage = "Bilddaten konnten nicht gelesen werden"
                     return
                 }
-
                 if let uiImage = UIImage(data: data) {
                     profileImage = Image(uiImage: uiImage)
                     profileImageData = data
@@ -126,77 +121,39 @@ class ProfileEditViewModel: ObservableObject {
     }
 
     func uploadProfileImage() async -> Bool {
-            guard let imageData = profileImageData else {
-                errorMessage = "Kein Bild ausgewählt"
-                return false
-            }
-            let compressedImageData: Data
-            if imageData.count > 1_000_000 {
-                if let uiImage = UIImage(data: imageData),
-                   let compressedData = uiImage.jpegData(compressionQuality: 0.5) {
-                    compressedImageData = compressedData
-                } else {
-                    compressedImageData = imageData
-                }
+        guard let imageData = profileImageData else {
+            errorMessage = "Kein Bild ausgewählt"
+            return false
+        }
+        let compressedImageData: Data
+        if imageData.count > 1_000_000 {
+            if let uiImage = UIImage(data: imageData),
+               let compressedData = uiImage.jpegData(compressionQuality: 0.5) {
+                compressedImageData = compressedData
             } else {
                 compressedImageData = imageData
             }
+        } else {
+            compressedImageData = imageData
+        }
 
-            isUploadingImage = true
-
-            do {
-                let response = try await imgurRepository.uploadImage(compressedImageData)
-                profileImageURL = response.data.link.absoluteString
-
-                if let userId = user?.userId, let uiImage = UIImage(data: compressedImageData) {
-                    try await firestoreDb.collection("users").document(userId).updateData([
-                        "profileImageURL": profileImageURL as Any
-                    ])
-                }
-
-                isUploadingImage = false
-                return true
-            } catch {
-                isUploadingImage = false
-                errorMessage = "Fehler beim Hochladen des Bildes: \(error.localizedDescription)"
-                print(error)
-                return false
+        isUploadingImage = true
+        do {
+            let response = try await imgurRepository.uploadImage(compressedImageData)
+            profileImageURL = response.data.link.absoluteString
+            if let userId = user?.userId {
+                try await firestoreDb.collection("users").document(userId).updateData([
+                    "profileImageURL": profileImageURL as Any
+                ])
             }
-        }
-
-    func validateProfileData() -> Bool {
-        guard isPhotographer || isModel || isStudio else {
-            errorMessage = "Bitte wähle mindestens eine Rolle aus."
+            isUploadingImage = false
+            return true
+        } catch {
+            isUploadingImage = false
+            errorMessage = "Fehler beim Hochladen des Bildes: \(error.localizedDescription)"
+            print(error)
             return false
         }
-
-        guard !firstName.isEmpty,
-              !lastName.isEmpty,
-              !streetName.isEmpty,
-              !houseNumber.isEmpty,
-              !city.isEmpty,
-              !postalCode.isEmpty else {
-            errorMessage = "Bitte alle Pflichtfelder ausfüllen."
-            return false
-        }
-
-        guard !gender.isEmpty else {
-            errorMessage = "Bitte wähle ein Geschlecht aus."
-            return false
-        }
-
-        guard !experienceLevel.isEmpty else {
-            errorMessage = "Bitte wähle ein Erfahrungslevel aus."
-            return false
-        }
-
-        guard !shootingCategories.isEmpty else {
-            errorMessage = "Bitte wähle mindestens eine Shooting-Kategorie aus."
-            return false
-        }
-
-        errorMessage = nil
-        return true
     }
 
     func saveProfile() async {
@@ -205,17 +162,14 @@ class ProfileEditViewModel: ObservableObject {
             alertMessage = errorMessage ?? "Bitte überprüfe deine Eingaben."
             return
         }
-
         guard let userId = user?.userId else {
             errorMessage = "Benutzer-ID nicht gefunden"
             showAlert = true
             alertMessage = errorMessage ?? "Ein Fehler ist aufgetreten."
             return
         }
-
         isLoading = true
         errorMessage = nil
-
         if profileImageData != nil && (profileImageURL == nil || photoPickerItem != nil) {
             let success = await uploadProfileImage()
             if !success {
@@ -226,41 +180,50 @@ class ProfileEditViewModel: ObservableObject {
             }
         }
 
+        var userData: [String: Any] = [
+            "username": username,
+            "mail": mail,
+            "firstName": firstName,
+            "lastName": lastName,
+            "gender": gender,
+            "birthdate": birthdate,
+            "isPhotographer": isPhotographer,
+            "isModel": isModel,
+            "isStudio": isStudio,
+            "streetName": streetName,
+            "houseNumber": houseNumber,
+            "city": city,
+            "postalCode": postalCode,
+            "experienceLevel": experienceLevel,
+            "shootingCategories": shootingCategories,
+            "hasTattoos": hasTattoos,
+            "hasPiercings": hasPiercings,
+            "websiteURL": websiteURL,
+            "instagramURL": instagramURL,
+            "tiktokURL": tiktokURL,
+            "contactMail": contactMail
+        ]
+
+        let fullAddress = "\(streetName) \(houseNumber), \(postalCode) \(city)"
+        let geocoder = CLGeocoder()
         do {
-            var userData: [String: Any] = [
-                "username": username,
-                "mail": mail,
-                "firstName": firstName,
-                "lastName": lastName,
-                "gender": gender,
-                "birthdate": birthdate,
-                "isPhotographer": isPhotographer,
-                "isModel": isModel,
-                "isStudio": isStudio,
-                "streetName": streetName,
-                "houseNumber": houseNumber,
-                "city": city,
-                "postalCode": postalCode,
-                "experienceLevel": experienceLevel,
-                "shootingCategories": shootingCategories,
-                "hasTattoos": hasTattoos,
-                "hasPiercings": hasPiercings,
-                "websiteURL": websiteURL,
-                "instagramURL": instagramURL,
-                "tiktokURL": tiktokURL,
-                "contactMail": contactMail
-            ]
+            let placemarks = try await geocoder.geocodeAddressString(fullAddress)
+            let coordinate = placemarks.first?.location?.coordinate
+            userData["latitude"] = coordinate?.latitude
+            userData["longitude"] = coordinate?.longitude
+        } catch {
+            print("Geocoding fehlgeschlagen: \(error.localizedDescription)")
+        }
 
-            if let imageURL = profileImageURL {
-                userData["profileImageURL"] = imageURL
-            }
+        if let imageURL = profileImageURL {
+            userData["profileImageURL"] = imageURL
+        }
 
+        do {
             try await firestoreDb.collection("users").document(userId).updateData(userData)
-
             if let currentUser = auth.currentUser, currentUser.email != mail {
                 try await currentUser.sendEmailVerification(beforeUpdatingEmail: mail)
             }
-
             let updatedUser = User(
                 userId: userId,
                 username: username,
@@ -285,15 +248,14 @@ class ProfileEditViewModel: ObservableObject {
                 websiteURL: websiteURL,
                 instagramURL: instagramURL,
                 tiktokURL: tiktokURL,
-                contactEmail: contactMail
+                contactEmail: contactMail,
+                latitude: userData["latitude"] as? Double,
+                longitude: userData["longitude"] as? Double
             )
-
             loginViewModel.user = updatedUser
-
             if let imageURL = profileImageURL {
                 await loginViewModel.updateProfileImage(from: imageURL)
             }
-
             showAlert = true
             alertMessage = "Profil erfolgreich aktualisiert!"
         } catch {
@@ -302,10 +264,38 @@ class ProfileEditViewModel: ObservableObject {
             alertMessage = errorMessage ?? "Ein Fehler ist aufgetreten."
             print(error)
         }
-
         isLoading = false
     }
 
+    func validateProfileData() -> Bool {
+        guard isPhotographer || isModel || isStudio else {
+            errorMessage = "Bitte wähle mindestens eine Rolle aus."
+            return false
+        }
+        guard !firstName.isEmpty,
+              !lastName.isEmpty,
+              !streetName.isEmpty,
+              !houseNumber.isEmpty,
+              !city.isEmpty,
+              !postalCode.isEmpty else {
+            errorMessage = "Bitte alle Pflichtfelder ausfüllen."
+            return false
+        }
+        guard !gender.isEmpty else {
+            errorMessage = "Bitte wähle ein Geschlecht aus."
+            return false
+        }
+        guard !experienceLevel.isEmpty else {
+            errorMessage = "Bitte wähle ein Erfahrungslevel aus."
+            return false
+        }
+        guard !shootingCategories.isEmpty else {
+            errorMessage = "Bitte wähle mindestens eine Shooting-Kategorie aus."
+            return false
+        }
+        errorMessage = nil
+        return true
+    }
 
     func toggleCategory(_ category: String) {
         if shootingCategories.contains(category) {
