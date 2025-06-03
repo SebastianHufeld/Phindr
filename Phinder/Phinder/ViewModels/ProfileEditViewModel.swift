@@ -256,6 +256,7 @@ class ProfileEditViewModel: ObservableObject {
             if let imageURL = profileImageURL {
                 await loginViewModel.updateProfileImage(from: imageURL)
             }
+            await loginViewModel.currentUserViewModel.fetchCurrentUser()
             showAlert = true
             alertMessage = "Profil erfolgreich aktualisiert!"
         } catch {

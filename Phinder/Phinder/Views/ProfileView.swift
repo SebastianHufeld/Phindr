@@ -9,19 +9,23 @@ import SwiftUI
 
 struct ProfileView: View {
     let user: User?
-    @State private var selectedTab: String = "Fotos"
+
     @EnvironmentObject var currentUserViewModel: CurrentUserViewModel
     @EnvironmentObject private var loginViewModel: LoginViewModel
+
+    @State private var selectedTab: String = "Fotos"
+    @State private var reloadKey = UUID()
 
     private var displayedUser: User? {
         user ?? currentUserViewModel.user
     }
 
-    var isOwnProfile: Bool {
-        guard let actualUser = displayedUser, let currentUser = currentUserViewModel.user else {
-            return false
+    private var isOwnProfile: Bool {
+        if let displayedUser = displayedUser,
+           let currentUser = currentUserViewModel.user {
+            return displayedUser.userId == currentUser.userId
         }
-        return actualUser.userId == currentUser.userId
+        return false
     }
 
     var body: some View {
@@ -56,7 +60,6 @@ struct ProfileView: View {
                                         .foregroundColor(selectedTab == tab ? .white : .primary)
                                         .cornerRadius(10)
                                 }
-                                .foregroundStyle(.primary)
                             }
 
                             if isOwnProfile {
@@ -67,23 +70,22 @@ struct ProfileView: View {
                                         .background(Color.gray.opacity(0.1))
                                         .cornerRadius(10)
                                 }
-                                .foregroundStyle(.primary)
                             }
                         }
                         .padding(.horizontal)
                     }
-                    .padding(.bottom, 8)
 
+                    
                     if selectedTab == "Fotos" {
                         ProfilePhotosView(user: actualUser, isOwnProfile: isOwnProfile)
-                            .environmentObject(currentUserViewModel)
-                    } else if selectedTab == "Info" {
-                        ProfileInfoView(user: actualUser)
                     } else if selectedTab == "Beschreibung" {
                         ProfileDescriptionView(user: actualUser, isOwnProfile: isOwnProfile)
                     } else if selectedTab == "Kontakt" {
                         ProfileContactView(user: actualUser)
+                    } else if selectedTab == "Info" {
+                        ProfileInfoView(user: actualUser)
                     }
+
                 } else {
                     Text("Profil konnte nicht geladen werden.")
                         .foregroundColor(.red)
@@ -91,9 +93,13 @@ struct ProfileView: View {
                 }
             }
         }
+        .id(reloadKey)
+        .onChange(of: currentUserViewModel.user?.profileImageURL) {
+            if user == nil {
+                reloadKey = UUID()
+            }
+        }
         .navigationTitle(isOwnProfile ? "Mein Profil" : "Profil")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-
-
