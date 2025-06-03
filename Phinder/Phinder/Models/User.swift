@@ -42,18 +42,22 @@ struct User: Codable, Equatable, Hashable {
     }
 
     var websiteAsURL: URL? {
-        guard let urlString = websiteURL, let url = URL(string: urlString) else { return nil }
-        return url
+        return makeURL(from: websiteURL)
     }
-    
+
     var instagramAsURL: URL? {
-        guard let urlString = instagramURL, let url = URL(string: urlString) else { return nil }
-        return url
+        return makeURL(from: instagramURL)
     }
-    
+
     var tiktokAsURL: URL? {
-        guard let urlString = tiktokURL, let url = URL(string: urlString) else { return nil }
-        return url
+        return makeURL(from: tiktokURL)
+    }
+
+    private func makeURL(from raw: String?) -> URL? {
+        guard let input = raw?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !input.isEmpty else { return nil }
+        let final = input.starts(with: "http") ? input : "https://\(input)"
+        return URL(string: final)
     }
     
     var contactEmailAsURL: URL? {

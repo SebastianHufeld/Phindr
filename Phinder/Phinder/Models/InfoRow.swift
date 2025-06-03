@@ -30,39 +30,38 @@ struct LinkRow: View {
     var showIcon: Bool = true
     var showValueText: Bool = true
 
+    let customColor = Color(hex: "537652")
+
     var body: some View {
-        HStack {
-            Text(label)
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            Spacer()
-            if let url = url {
-                Link(destination: url) {
+        if let url = url {
+            Link(destination: url) {
+                HStack {
+                    Text(label)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    Spacer()
                     HStack(spacing: 6) {
                         if showIcon, let iconInfo = iconName(for: label) {
                             if iconInfo.isSFLabel {
                                 Image(systemName: iconInfo.name)
                                     .font(.body)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(customColor)
                             } else {
                                 Image(iconInfo.name)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 20, height: 20)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(customColor)
                             }
                         }
                         if showValueText {
                             Text(value)
                                 .font(.body)
                                 .underline()
-                                .foregroundColor(.blue)
+                                .foregroundColor(customColor)
                         }
                     }
                 }
-            } else {
-                Text(value)
-                    .font(.body)
             }
         }
     }

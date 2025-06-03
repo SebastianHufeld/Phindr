@@ -33,10 +33,6 @@ class HomeViewModel: ObservableObject {
         do {
             let snapshot = try await firestoreDb.collection("users").getDocuments()
             let allUsers = try snapshot.documents.map { try $0.data(as: User.self) }
-            print("Alle User aus Firestore: \(allUsers.count)")
-            for user in allUsers {
-                print("User: \(user.username), Lat: \(String(describing: user.latitude)), Lon: \(String(describing: user.longitude))")
-            }
 
             self.nearbyUsers = allUsers.filter { otherUser in
                 guard let otherLat = otherUser.latitude,
@@ -50,7 +46,6 @@ class HomeViewModel: ObservableObject {
 
                 return distanceToUser <= distance
             }
-            print("Nearby Users gefunden: \(nearbyUsers.count)")
 
         } catch {
             errorMessage = "Fehler beim Laden der Benutzer: \(error.localizedDescription)"

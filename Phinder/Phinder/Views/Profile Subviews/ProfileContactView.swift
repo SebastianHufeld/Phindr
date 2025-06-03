@@ -24,7 +24,9 @@ struct ProfileContactView: View {
                 Text("Kontaktdaten")
                     .font(.headline)
                 Spacer()
-                if let actualUser = user, let currentUser = currentUserViewModel.user, actualUser.userId == currentUser.userId {
+                if let actualUser = user,
+                   let currentUser = currentUserViewModel.user,
+                   actualUser.userId == currentUser.userId {
                     Button("Bearbeiten") {
                         showEditSheet = true
                     }
@@ -33,23 +35,34 @@ struct ProfileContactView: View {
             .padding(.bottom, 5)
 
             if let displayedUser = user {
-                if showContactEmail, let contactEmail = displayedUser.contactEmail, !contactEmail.isEmpty {
-                    LinkRow(label: "Kontakt E-Mail", value: contactEmail, url: displayedUser.contactEmailAsURL, showValueText: true)
-                }
+                let hasNoContactInfo =
+                    (displayedUser.contactEmail?.isEmpty ?? true) &&
+                    (displayedUser.websiteURL?.isEmpty ?? true) &&
+                    (displayedUser.instagramURL?.isEmpty ?? true) &&
+                    (displayedUser.tiktokURL?.isEmpty ?? true)
 
-                if showWebsite, let websiteURL = displayedUser.websiteAsURL {
-                    LinkRow(label: "Website", value: displayedUser.websiteURL ?? "", url: websiteURL, showValueText: false)
-                }
-
-                if showInstagram, let instagramURL = displayedUser.instagramAsURL {
-                    LinkRow(label: "Instagram", value: displayedUser.instagramURL ?? "", url: instagramURL, showValueText: false)
-                }
-
-                if showTikTok, let tiktokURL = displayedUser.tiktokAsURL {
-                    LinkRow(label: "TikTok", value: displayedUser.tiktokURL ?? "", url: tiktokURL, showValueText: false)
+                if hasNoContactInfo {
+                    Text("Keine Kontaktdaten bekannt.")
+                        .foregroundColor(.gray)
+                        .italic()
+                } else {
+                    if showContactEmail, let url = displayedUser.contactEmailAsURL {
+                        LinkRow(label: "Kontakt E-Mail", value: "E-Mail", url: url, showValueText: false)
+                    }
+                    if showWebsite, let url = displayedUser.websiteAsURL {
+                        LinkRow(label: "Website", value: "Website", url: url, showValueText: false)
+                    }
+                    if showInstagram, let url = displayedUser.instagramAsURL {
+                        LinkRow(label: "Instagram", value: "Instagram", url: url, showValueText: false)
+                    }
+                    if showTikTok, let url = displayedUser.tiktokAsURL {
+                        LinkRow(label: "TikTok", value: "TikTok", url: url, showValueText: false)
+                    }
                 }
             } else {
                 Text("Keine Kontaktdaten verfügbar.")
+                    .foregroundColor(.gray)
+                    .italic()
             }
         }
         .padding()
@@ -65,11 +78,8 @@ struct ProfileContactView: View {
                 .environmentObject(currentUserViewModel)
             }
         }
-        .onAppear {
-            if let actualUser = user, let currentUser = currentUserViewModel.user, actualUser.userId == currentUser.userId {
-            }
-        }
     }
 }
+
 
 
