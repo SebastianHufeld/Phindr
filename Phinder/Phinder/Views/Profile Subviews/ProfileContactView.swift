@@ -44,7 +44,7 @@ struct ProfileContactView: View {
                 if hasNoContactInfo {
                     Text("Keine Kontaktdaten bekannt.")
                         .foregroundColor(.gray)
-                        .italic()
+                        .padding()
                 } else {
                     if showContactEmail, let url = displayedUser.contactEmailAsURL {
                         LinkRow(label: "Kontakt E-Mail", value: "E-Mail", url: url, showValueText: false)

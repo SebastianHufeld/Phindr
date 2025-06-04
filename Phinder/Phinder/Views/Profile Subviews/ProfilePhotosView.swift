@@ -22,6 +22,12 @@ struct ProfilePhotosView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            if profileGalleryViewModel.photoURLs.isEmpty {
+                Text("Noch keine Bilder vorhanden.")
+                    .foregroundColor(.gray)
+                    .padding()
+            }
+
             LazyVGrid(columns: gridItems, spacing: 3) {
                 if isOwnProfile {
                     PhotosPicker(

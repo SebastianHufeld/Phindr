@@ -14,24 +14,40 @@ struct ProfileDescriptionView: View {
     @State private var showEdit = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(user.descriptionText ?? "Keine Beschreibung vorhanden.")
-                .font(.body)
-                .padding()
+        ZStack {
+            if let text = user.descriptionText, !text.isEmpty {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(text)
+                        .font(.body)
+                        .foregroundColor(.primary)
 
-            if isOwnProfile {
-                Button("Beschreibung bearbeiten") {
-                    showEdit = true
+                    if isOwnProfile {
+                        Button("Beschreibung bearbeiten") {
+                            showEdit = true
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                    }
                 }
                 .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                VStack {
+                    Text("Keine Beschreibung vorhanden.")
+                        .foregroundColor(.gray)
+                        .font(.body)
+                        .padding(.top, 20)
+                    Spacer()
+                }
                 .frame(maxWidth: .infinity)
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
             }
         }
-        .padding()
         .sheet(isPresented: $showEdit) {
             EditDescriptionView(user: user)
         }
     }
 }
+
+
