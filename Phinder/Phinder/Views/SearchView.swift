@@ -78,6 +78,17 @@ struct SearchView: View {
             }
             .navigationTitle("Suche")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        filterViewModel.resetFilters()
+                        location = ""
+                        distance = 50
+                        selectedSearchType = .model
+                    }) {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+                }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         Task {

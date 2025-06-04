@@ -67,5 +67,21 @@ class FilterViewModel: ObservableObject {
 
         return "Bitte folgende Felder ausfüllen:\n" + missing.joined(separator: ", ")
     }
+    
+    func resetFilters() {
+        location = ""
+        distance = 50
+        selectedSearchType = .model
+        gender = ""
+        birthdate = Date()
+        experienceLevel = ""
+        shootingCategories = []
+        hasTattoos = false
+        hasPiercings = false
+        minAgeText = ""
+        maxAgeText = ""
+        revision = UUID()
+    }
+
 }
 

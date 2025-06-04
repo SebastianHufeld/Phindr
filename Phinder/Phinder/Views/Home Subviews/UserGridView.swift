@@ -21,6 +21,7 @@ struct UserGridView: View {
                     .buttonStyle(PlainButtonStyle())
                 }
             }
+            .padding(.top, 10)
             .padding(.horizontal, 10)
         }
     }
