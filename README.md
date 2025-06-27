@@ -1,13 +1,13 @@
-# Phinder
+# Phindr
 
 **Die All in One Lösung für Modelle und Fotografen**
 
 
-Phinder ist DIE App, für Modelle und Fotografen - oder auch die, die es gerne werden wollen. Du bist auf der Suche nach einem Model aus deiner Gegend? Dann swipe dich durch die Liste und Suche nach den Kriterien, die für dich wichtig sind. 
+Phindr ist DIE App, für Modelle und Fotografen - oder auch die, die es gerne werden wollen. Du bist auf der Suche nach einem Model aus deiner Gegend? Dann swipe dich durch die Liste und Suche nach den Kriterien, die für dich wichtig sind. 
 Du hast einen Fotografen und willst schauen wie zuverlässig er ist? Schaue dir bisher bewertete Shoots von anderen Modellen an. 
 
 Egal ob es um die Planung deines nächsten Shoots geht, das finden einer passenden Person in einer fremden Stadt oder die Suche nach passenden Studios. 
-Mit Phinder ist das alles möglich!
+Mit Phindr ist das alles möglich!
 
 ## Design
 <p>
@@ -19,12 +19,9 @@ Mit Phinder ist das alles möglich!
 
 ## Features
 
-- [ ] Model- & Fotografensuche
-- [ ] Filtersystem um passende Personen zu finden
-- [ ] Umkreissuche
-- [ ] Bewerten von Shoots
-- [ ] Bewertung andere Personen lesen
-- [ ] Präsentieren der eigenen Arbeiten
+- [X] Model- & Fotografensuche
+- [X] Filtersystem um passende Personen zu finden
+- [X] Präsentieren der eigenen Arbeiten
 
 
 
@@ -50,9 +47,16 @@ Für die User- & Datenspeicherung möchte ich eine Firebase Datenbank verwenden.
 
 Folgende API Calls verwende ich:
 
-https://openweathermap.org/api
+https://apidocs.imgur.com
 
-Die Wetter API dient dazu, dass die Shoots besser geplant werden können. In meiner Vorstellung wird dann anhand des Tages und des Standortes das Wetter angezeigt.
+- IMGUR API wird zum Bildupload verwendet
+
+https://opencagedata.com/api
+
+- OpenCage API wird für die Umkreissuche verwendet
+
+
+
 
 
 
@@ -64,6 +68,9 @@ Bisher ist geplant das Firebase Framework zu verwenden.
 
 ## Ausblick
 
+- [ ] Umkreissuche
+- [ ] Bewerten von Shoots
+- [ ] Bewertung andere Personen lesen
 - [ ] Abspeichern Ideen mit einem Fotografen / Model
 - [ ] Überblick über bisherige Shoots
 - [ ] Matchsystem

@@ -26,8 +26,9 @@ struct TabBarView: View {
                     SearchView()
                 }
             }
-//            Tab("Nachrichten", systemImage: "message.fill") {
+//            Tab("Einstellungen", systemImage: "gear") {
 //                NavigationStack {
+//                    SettingsView()
 //                }
 //            }
             Tab("Profil", systemImage: "person.crop.rectangle.fill") {

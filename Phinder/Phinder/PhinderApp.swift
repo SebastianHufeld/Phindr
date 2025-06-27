@@ -13,10 +13,12 @@ import FirebaseCore
 struct PhinderApp: App {
     @StateObject private var currentUserViewModel = CurrentUserViewModel()
     @StateObject private var loginViewModel: LoginViewModel
+    @AppStorage("darkModeEnabled") private var darkModeEnabled: Bool = false
 
     init() {
         FirebaseConfiguration.shared.setLoggerLevel(.min)
         FirebaseApp.configure()
+        
         let currentUserVM = CurrentUserViewModel()
         _currentUserViewModel = StateObject(wrappedValue: currentUserVM)
         _loginViewModel = StateObject(wrappedValue: LoginViewModel(currentUserViewModel: currentUserVM))
@@ -24,15 +26,18 @@ struct PhinderApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if loginViewModel.isUserLoggedIn {
-                TabBarView()
-                    .environmentObject(currentUserViewModel)
-            } else {
-                LoginView()
-            }
+            contentView()
+                .preferredColorScheme(darkModeEnabled ? .dark : .light)
+                .environmentObject(loginViewModel)
+                .environmentObject(currentUserViewModel)
         }
-        .environmentObject(loginViewModel)
+    }
+    @ViewBuilder
+    private func contentView() -> some View {
+        if loginViewModel.isUserLoggedIn {
+            TabBarView()
+        } else {
+            LoginView()
+        }
     }
 }
-
-

@@ -12,6 +12,7 @@ struct ProfileView: View {
 
     @EnvironmentObject var currentUserViewModel: CurrentUserViewModel
     @EnvironmentObject private var loginViewModel: LoginViewModel
+    @Environment(\.dismiss) private var dismiss
 
     @State private var selectedTab: String = "Fotos"
     @State private var reloadKey = UUID()
@@ -76,7 +77,6 @@ struct ProfileView: View {
                         .padding(.horizontal)
                     }
 
-                    
                     if selectedTab == "Fotos" {
                         ProfilePhotosView(user: actualUser, isOwnProfile: isOwnProfile)
                     } else if selectedTab == "Beschreibung" {
@@ -102,5 +102,18 @@ struct ProfileView: View {
         }
         .navigationTitle(isOwnProfile ? "Mein Profil" : "Profil")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Zurück")
+                    }
+                }
+            }
+        }
     }
 }
